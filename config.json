@@ -1,0 +1,27 @@
+{
+  "backtest_config": {
+    "start_date": "2025-01-01",
+    "end_date": "2025-07-14",
+    "cash": 100000,
+    "commission": 0.0006,
+    "sizer": "FixedSize",
+    "fixed_size_stake": 20,
+    "data_frequency": "daily"
+  },
+  
+  "download_config": {
+    "yf_config" : {
+      "ticker": "GC=F",
+      "download_mode": "manual",
+      "download_start_date": "2025-05-1",
+      "download_end_date": "2025-06-30"
+    },
+    "alpha_config" : {
+      "symbol": "XAUUSD",
+      "all_history" : true,
+      "time_series": "TIME_SERIES_INTRADAY",
+      "interval": "30min",
+      "api_key": "IJNXYI77KA09TCWW"
+    }
+  }
+}
