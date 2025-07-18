@@ -1,13 +1,12 @@
 {
   "backtest_config": {
-    "file": "data/XAUUSD_1h_2025-06-18-now.csv",
+    "file": "data/OANDA_XAUUSD, 30_e15ab.csv",
     "start_date": "",
     "end_date": "",
     "cash": 100000,
     "commission": 0.0006,
     "sizer": "FixedSize",
-    "fixed_size_stake": 20,
-    "data_frequency": "daily"
+    "fixed_size_stake": 10
   },
   
   "download_config": {

@@ -7,7 +7,7 @@ import pandas as pd
 from datetime import datetime
 import json
 
-from downloader.config_loader import load_config
+from utils.config_loader import load_config
 
 config = load_config().get("download_config", {}).get("alpha_config", {})
 api_key = config.get("api_key")  # 在这里填入你从 Alpha Vantage 获得的 API 密钥

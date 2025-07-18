@@ -37,6 +37,14 @@
 
 ## macky
 
+> 压力位的本质是什么，是空头的心理预期；比如一个局部顶部，在这里买入的人，如果下次遇到这个价格会有很强的平仓解套倾向，或者说上次在这里没有卖掉的人，下次碰到会有很强的出手倾向。
+>
+> 参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。人们对于区域顶部和底部的记忆也是最深刻的。
+>
+> 压力强度指标也需要考虑，例如双底
+
+
+
 - [ ] how to define resist & support?
   - [x] 20 days highest / lowest
     - [ ] intervalize
@@ -45,18 +53,20 @@
 - [ ] take profit / stop loss
 - [ ] optimization
   - [x] increase trading frequency (30min, 1h)
-  - [ ] parameterization (deep-learning)
+  - [ ] parameterization
+    - [ ] grid tuning
+    - [ ] ML / DL
   - [ ] recognize left side / right side (via news or sth)
 
 
 
-| strategy     | info                                                         | perf   | comment                        |
-| ------------ | ------------------------------------------------------------ | ------ | ------------------------------ |
-| **1.resist** |                                                              |        |                                |
-| 1.00         | - use extreme value as resist / support<br />- break -> buy <br />- close after 3 t | -3.81% | - 左侧上涨趋势，会变成追涨杀跌 |
-| 1.01         | - signal confirm: break -> observe<br />- candle pattern (strength index) |        |                                |
-| 1.02         | - define resist/support as stack                             |        |                                |
-| 1.03         | - when breakout -> buy; reject -> sell                       |        |                                |
+| strategy   | info                                                         | result |        |            | review                                                       |
+| ---------- | ------------------------------------------------------------ | ------ | ------ | ---------- | ------------------------------------------------------------ |
+| **resist** |                                                              | **WR** | **PR** | **profit** | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -      | -3.81%     | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7    | -0.43%     | 1.do opposite trade<br />2. doesn't recognize resist / support well |
+| v1.02      | 1. extrem value -> pivot high/low<br />                      |        |        |            |                                                              |
+| v1.03      | 1. integrate day line<br />2. integrate news                 |        |        |            |                                                              |
 
 
 
@@ -115,7 +125,16 @@
 
 
 
-# 学习资源
+# 开发记录
+
+```python
+# 调试断点
+bt.num2date(self.data.datetime[0]).strftime('%Y-%m-%d %H:%M:%S') == '2025-06-19 08:00:00'
+```
+
+
+
+## 学习资源
 
 | --     | --                                                           |
 | ------ | ------------------------------------------------------------ |

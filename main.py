@@ -3,10 +3,11 @@ import pandas as pd
 import warnings
 import os
 
-from dataloader import load_data
-from downloader.config_loader import load_config
+from utils.dataloader import load_data
+from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
 from strategy.SupportResistanceBreakout import SupportResistanceBreakout
+from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
 
 # config
 config = load_config().get("backtest_config", {})
@@ -28,7 +29,16 @@ if __name__ == "__main__":
     cerebro.adddata(data_feed)
 
     # Add strategy
-    cerebro.addstrategy(SupportResistanceBreakout, period=20, hold_days=5, pullback_period=2)  # Use SupportResistanceBreakout strategy
+    cerebro.addstrategy(
+        SupportResistanceBreakout,
+        period=20,
+        hold_days=10,
+        observe_period=2,
+        CSI_threshold=0.5,
+        take_profit=0.1,
+        stop_loss=0.05,
+        stake_size=fixed_size_stake
+    ) 
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
@@ -38,14 +48,17 @@ if __name__ == "__main__":
     # add analyzers
     cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
     cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
+    cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
 
     # Run backtest
     result = cerebro.run()
 
-    # Plot results
+    # Plot results、
+    print('----------------------backtesting results----------------------')
     print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
     print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
     
     end_value = cerebro.broker.getvalue()
     profit_rate = (end_value - cash) / cash
@@ -55,7 +68,6 @@ if __name__ == "__main__":
         style='candlestick',      # 设置显示为蜡烛图
         bgcolor='white',          # 设置背景色
         tight_layout=True,        # 紧凑布局
-        plotdist=0,               # 让买卖点贴近K线
         # volume=False              # 不画成交量
     )
 

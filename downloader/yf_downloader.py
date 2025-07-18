@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import os
 import json
 
-from downloader.config_loader import load_config
+from utils.config_loader import load_config
 
 # 1. 设置时间范围：根据配置的下载方式决定
 start_date = None

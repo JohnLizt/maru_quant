@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from twelvedata import TDClient
 import pandas as pd
 
-from downloader.config_loader import load_config
+from utils.config_loader import load_config
 from datetime import datetime
 
 # 读取配置
