@@ -1,10 +1,10 @@
 {
   "backtest_config": {
-    "file": "data/OANDA_XAUUSD, 30_e15ab.csv",
+    "file": "data/OANDA_XAUUSD, 30_seasonly.csv",
     "start_date": "",
     "end_date": "",
     "cash": 100000,
-    "commission": 0.0006,
+    "commission": 0.00015,
     "sizer": "FixedSize",
     "fixed_size_stake": 10
   },

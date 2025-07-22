@@ -4,7 +4,7 @@ from indicator.CandleStrengthIndex import CandleStrengthIndex
 from indicator.PivotHigh import PivotHigh, PivotLow
 
 # 定义支撑位/阻力位突破策略
-class SupportResistanceBreakout(bt.Strategy):
+class Macky(bt.Strategy):
     params = (
         ('window', 2),  # 支撑/阻力位计算窗口大小
         ('hold_days', 5),  # 最大持仓周期
@@ -27,6 +27,7 @@ class SupportResistanceBreakout(bt.Strategy):
         self.entry_bar = None  # 记录开仓的bar号
         self.break_bar = None  # 记录突破阻力/支撑位的bar号
         self.csi = CandleStrengthIndex(self.data) # 蜡烛强度指标
+        self.csi.plotinfo.plot = False  # 不在图表中显示CSI
 
     def next(self):
         # 如果有未完成订单，跳过

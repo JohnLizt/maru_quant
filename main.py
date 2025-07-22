@@ -3,10 +3,11 @@ import pandas as pd
 import warnings
 import os
 
+from strategy.Breakout import Breakout
+from strategy.ConsecNdays import ConsecNdays
 from utils.dataloader import load_data
 from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
-from strategy.SupportResistanceBreakout import SupportResistanceBreakout
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
 
 # config
@@ -16,7 +17,7 @@ dataFile = config.get("file")
 start_date = config.get("start_date")
 end_date = config.get("end_date")
 cash = config.get("cash", 100000.0)  # Default starting cash
-commission = config.get("commission", 0.0006)  # Default commission rate
+commission = config.get("commission", 0.00015)  # Default commission rate
 sizer = config.get("sizer", "FixedSize")  # Default sizer type
 fixed_size_stake = config.get("fixed_size_stake", 1)  # Default fixed size of shares
 
@@ -30,19 +31,15 @@ if __name__ == "__main__":
 
     # Add strategy
     cerebro.addstrategy(
-        SupportResistanceBreakout,
-        period=20,
-        hold_days=10,
-        observe_period=2,
-        CSI_threshold=0.5,
-        take_profit=0.1,
-        stop_loss=0.05,
-        stake_size=fixed_size_stake
-    ) 
+        Breakout,
+        window=12,
+        threshold=0.001
+    )
+    # cerebro.addstrategy(SMAStrategy)
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
-    cerebro.broker.setcommission(commission)  # 0.1% commission
+    cerebro.broker.setcommission(commission)  # 0.015% commission
     cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
 
     # add analyzers

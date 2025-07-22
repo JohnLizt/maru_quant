@@ -1,10 +1,13 @@
 import backtrader as bt
 import pandas as pd
 
+from indicator.PivotHigh import PivotHigh
+
 # Create a Stratey
-class SMAStrategy(bt.Strategy):
+class Breakout(bt.Strategy):
     params = (
-        ('maperiod', 15),
+        ('window', 12),  # 滑动窗口大小
+        ('threshold', 0.1),  # 区间阈值，默认10%
     )
 
     def log(self, txt, dt=None):
@@ -13,27 +16,13 @@ class SMAStrategy(bt.Strategy):
         print('%s, %s' % (bt.num2date(dt).strftime('%Y-%m-%d %H:%M:%S'), txt))
 
     def __init__(self):
-        # Keep a reference to the "close" line in the data[0] dataseries
+        self.resistance = PivotHigh(self.data, window=self.params.window, threshold=self.params.threshold)
+        
         self.dataclose = self.datas[0].close
-
-        # To keep track of pending orders and buy price/commission
         self.order = None
         self.buyprice = None
         self.buycomm = None
 
-        # Add a MovingAverageSimple indicator
-        self.sma = bt.indicators.SimpleMovingAverage(
-            self.datas[0], period=self.params.maperiod)
-
-        # Indicators for the plotting show
-        bt.indicators.ExponentialMovingAverage(self.datas[0], period=25)
-        bt.indicators.WeightedMovingAverage(self.datas[0], period=25,
-                                            subplot=True)
-        bt.indicators.StochasticSlow(self.datas[0])
-        bt.indicators.MACDHisto(self.datas[0])
-        rsi = bt.indicators.RSI(self.datas[0])
-        bt.indicators.SmoothedMovingAverage(rsi, period=10)
-        bt.indicators.ATR(self.datas[0], plot=False)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -74,30 +63,27 @@ class SMAStrategy(bt.Strategy):
                  (trade.pnl, trade.pnlcomm))
 
     def next(self):
-        # Simply log the closing price of the series from the reference
-        # self.log('Close, %.2f' % self.dataclose[0])
-
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
             return
 
         # Check if we are in the market
         if not self.position:
-
-            # Not yet ... we MIGHT BUY if ...
-            if self.dataclose[0] > self.sma[0]:
-
-                # BUY, BUY, BUY!!! (with all possible default parameters)
-                self.log('BUY CREATE, %.2f' % self.dataclose[0])
-
-                # Keep track of the created order to avoid a 2nd order
-                self.order = self.buy()
-
+            current_open = self.data.open[0]
+            current_close = self.dataclose[0]
+            
+            # 检查所有阻力位是否被突破
+            resist_lines = ['resist0', 'resist1', 'resist2', 'resist3', 'resist4']
+            for resist_name in resist_lines:
+                resist_value = getattr(self.resistance.lines, resist_name)[0]
+                
+                # 如果阻力位有效且日内突破（开盘价 < 阻力位，收盘价 > 阻力位）
+                if not pd.isna(resist_value) and current_open < resist_value < current_close:
+                    self.log(f'[信号]：日内突破阻力位 {resist_name}={resist_value:.2f}，开盘价 {current_open:.2f}，收盘价 {current_close:.2f}，执行买入')
+                    self.order = self.buy()
+                    break  # 只要有一个阻力位被突破就执行买入
         else:
-
-            if self.dataclose[0] < self.sma[0]:
-                # SELL, SELL, SELL!!! (with all possible default parameters)
-                self.log('SELL CREATE, %.2f' % self.dataclose[0])
-
-                # Keep track of the created order to avoid a 2nd order
+            # 简单的卖出策略：持有3天后卖出
+            if len(self) >= (self.bar_executed + 3):
+                self.log(f'[信号]：持有3天，执行卖出')
                 self.order = self.sell()

@@ -18,55 +18,99 @@
   
 
 
-# 策略
+# CTA主流策略类型
 
-> 第一阶段以低频交易为主
->
-> 1. 贴近主观交易：保留“选行业/找主线”的感觉；宏观经济认识；
->
-> 2. 又可以用 Python / Pandas / 回测框架跑出历史数据来验证逻辑；
->
-> 3. 把“拍脑袋”换成定量的因子系统，各类指标更加明确精准；
-> 4. 增强交易纪律性，信号、仓位管理
+> 1. **趋势跟踪（Trend Following）**
+>    - 代表：SMA/EMA突破、Donchian通道、Turtle策略、ADX趋势跟随等
+>    - 逻辑：价格突破某一均值或区间后顺势买入/卖出，长期持有趋势单
+> 2. **均值回归（Mean Reversion）**
+>    - 代表：布林带回归、Keltner通道、价差套利、振荡区间策略
+>    - 逻辑：价格偏离均值后，预期其回归历史均值附近
+> 3. **套利策略（Arbitrage）**
+>    - 代表：跨期套利（Calendar Spread）、跨品种套利、统计套利（Pairs Trading）
+>    - 逻辑：利用相关性、价差等市场无效性进行低风险套利
+> 4. **动量策略（Momentum）**
+>    - 代表：横截面动量（多品种间强者恒强）、时间序列动量（单品种顺势）
+>    - 逻辑：近期涨得多的品种继续买入，跌得多的继续卖出
+> 5. **反转策略（Reversal）**
+>    - 代表：超买超卖反转（如RSI、CCI）、极端事件反转
+>    - 逻辑：短期内涨跌过度，预期价格出现反转
+> 6. **突破策略（Breakout）**
+>    - 代表：区间突破、价格新高新低突破
+>    - 逻辑：价格突破一段时间内高点/低点后追随
+> 7. **波动率策略（Volatility）**
+>    - 代表：基于波动率的波段交易、波动率扩张收缩策略
+>    - 逻辑：利用波动率变化进行入场、出场或仓位调整
+> 8. **资金管理与组合优化**
+>    - 代表：多品种马丁格尔、凯利公式、动态止损止盈等
 
 
 
-* 对比估值？两只类似股票，出现估值缺口
-* 多因子CTA
-  * 复现研报-简单论文
+## **trend following**
 
-## macky
+> 适用于上涨/下跌行情，震荡市容易出事
 
-> 压力位的本质是什么，是空头的心理预期；比如一个局部顶部，在这里买入的人，如果下次遇到这个价格会有很强的平仓解套倾向，或者说上次在这里没有卖掉的人，下次碰到会有很强的出手倾向。
+### SMA
+
+
+
+## event-driven
+
+### LLM-news
+
+* 早鸟策略：新闻发出时快速买入
+* 买预期卖事实：在“靴子落地”时，提前布局的主力获利了结，往往有预期反方向的动能
+
+
+
+## breakout
+
+> 压力位/支撑位的本质：群体心理学
 >
 > 参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。人们对于区域顶部和底部的记忆也是最深刻的。
 >
 > 压力强度指标也需要考虑，例如双底
 
+- [x] how to define resist & support?
+  - [x] extreme value
+  - [x] pivot high/low
 
+- [ ] resist / support intensity
 
-- [ ] how to define resist & support?
-  - [x] 20 days highest / lowest
-    - [ ] intervalize
-- [ ] breakout
+- [ ] turn over signal
+
+  - [x] CSI
+
+  - [ ] CISD? wick must be filled, 80%
+
+    > https://www.youtube.com/watch?v=EvG8vRTgRbU&t=3s
+    >
+    > https://www.bilibili.com/video/BV1D9GLzyEJF/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=feacdd607007d02479769d9056af2634
+
   - [ ] consider resist turn to support when break
+
 - [ ] take profit / stop loss
+
+- [ ] trend tracking
+
+  - [ ] recognize left side / right side (via news or sth)
+
 - [ ] optimization
-  - [x] increase trading frequency (30min, 1h)
+  - [x] trading frequency (30min, 1h)
   - [ ] parameterization
     - [ ] grid tuning
     - [ ] ML / DL
-  - [ ] recognize left side / right side (via news or sth)
 
 
 
-| strategy   | info                                                         | result |        |            | review                                                       |
-| ---------- | ------------------------------------------------------------ | ------ | ------ | ---------- | ------------------------------------------------------------ |
-| **resist** |                                                              | **WR** | **PR** | **profit** | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -      | -3.81%     | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7    | -0.43%     | 1.do opposite trade<br />2. doesn't recognize resist / support well |
-| v1.02      | 1. extrem value -> pivot high/low<br />                      |        |        |            |                                                              |
-| v1.03      | 1. integrate day line<br />2. integrate news                 |        |        |            |                                                              |
+| strategy   | info                                                         | result |        |            | review                       |
+| ---------- | ------------------------------------------------------------ | ------ | ------ | ---------- | ---------------------------- |
+| **resist** |                                                              | **WR** | **PR** | **profit** | **accuracy & recall**        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -      | -3.81%     | 1. chase rising              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7    | -0.43%     | 1.resist definition not good |
+| v1.02      | 1. pivot: slide windows + monostack<br />                    |        |        |            | 1.too decrete                |
+| v1.03      | 1. avoid volatility: news + ATR                              |        |        |            |                              |
+| v1.04      | 1. integrate news:<br /> https://www.forexfactory.com/       |        |        |            |                              |
 
 
 
@@ -118,19 +162,16 @@
 
 
 
+## multi factor
+
+
+
+
+
 # 回测
 
 - [ ] calc beta
 - [ ] minute-level backtest
-
-
-
-# 开发记录
-
-```python
-# 调试断点
-bt.num2date(self.data.datetime[0]).strftime('%Y-%m-%d %H:%M:%S') == '2025-06-19 08:00:00'
-```
 
 
 

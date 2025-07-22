@@ -1,5 +1,6 @@
 import backtrader as bt
 
+# 蜡烛强度指标
 class CandleStrengthIndex(bt.Indicator):
     lines = ('csi',)
     params = (
