@@ -6,7 +6,8 @@
     "cash": 100000,
     "commission": 0.00015,
     "sizer": "FixedSize",
-    "fixed_size_stake": 10
+    "fixed_size_stake": 30,
+    "optimize_mode": false
   },
   
   "download_config": {

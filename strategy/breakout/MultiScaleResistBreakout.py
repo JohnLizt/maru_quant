@@ -2,12 +2,16 @@ import backtrader as bt
 import pandas as pd
 
 from indicator.PivotHigh import PivotHigh
+from strategy.utils.TakeProfitStopLoss import takeProfitStopLoss
 
 # Create a Stratey
-class Breakout(bt.Strategy):
+class MultiScaleResistBreakout(bt.Strategy):
     params = (
         ('window', 12),  # 滑动窗口大小
-        ('threshold', 0.1),  # 区间阈值，默认10%
+        ('threshold', 0.001),  # 区间阈值，默认0.1%
+        ('max_hold_bars', 24),   # 最大持仓时间，默认24个bar
+        ('take_profit', 0.005),  # 止盈率，默认0.5%
+        ('stop_loss', 0.0025),    # 止损率，默认0.25%
     )
 
     def log(self, txt, dt=None):
@@ -83,7 +87,5 @@ class Breakout(bt.Strategy):
                     self.order = self.buy()
                     break  # 只要有一个阻力位被突破就执行买入
         else:
-            # 简单的卖出策略：持有3天后卖出
-            if len(self) >= (self.bar_executed + 3):
-                self.log(f'[信号]：持有3天，执行卖出')
-                self.order = self.sell()
+            # 使用公共的持仓管理逻辑
+            takeProfitStopLoss(self, take_profit=self.params.take_profit, stop_loss=self.params.stop_loss)

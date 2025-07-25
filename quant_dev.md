@@ -1,8 +1,8 @@
-> 大方向上可以分为alpha、beta两大流派
+> 量化大方向上可以分为alpha、beta两大流派
 >
 > alpha追求中性，无视市场变化，赚取波动价差，中高频，持有1天以上就算低频了
 >
-> beta更类似传统主观交易，更加有纪律
+> beta更类似传统主观交易，只是纪律性好
 
 # 数据源
 
@@ -14,11 +14,10 @@
 | **charge**    |           |
 | tradingview   |           |
 
-- [ ] 支持A股 tushare 下载
-  
 
 
-# CTA主流策略类型
+
+# CTA strategy
 
 > 1. **趋势跟踪（Trend Following）**
 >    - 代表：SMA/EMA突破、Donchian通道、Turtle策略、ADX趋势跟随等
@@ -52,6 +51,8 @@
 
 ### SMA
 
+> 本质上是趋势追踪（追涨杀跌），适用于上涨/下跌行情
+
 
 
 ## event-driven
@@ -65,17 +66,21 @@
 
 ## breakout
 
-> 压力位/支撑位的本质：群体心理学
+> 压力位/支撑位的本质：**群体心理学**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。
 >
-> 参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。人们对于区域顶部和底部的记忆也是最深刻的。
+> 参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。
 >
-> 压力强度指标也需要考虑，例如双底
+> breakout策略核心思路是抓住成功突破后的一波行情，感觉上偏主观，信号要卡严一点，过滤掉大量的假突破、弱信号，后续持仓可以放宽
+>
+> **震荡市会非常难受**，上涨/下跌行情表现较好
 
 - [x] how to define resist & support?
   - [x] extreme value
   - [x] pivot high/low
 
 - [ ] resist / support intensity
+
+  - [ ] multi-scale
 
 - [ ] turn over signal
 
@@ -98,19 +103,24 @@
 - [ ] optimization
   - [x] trading frequency (30min, 1h)
   - [ ] parameterization
-    - [ ] grid tuning
+    - [ ] dynamic param (eg. ATR)
+    - [x] grid search optimizer
     - [ ] ML / DL
 
 
 
-| strategy   | info                                                         | result |        |            | review                       |
-| ---------- | ------------------------------------------------------------ | ------ | ------ | ---------- | ---------------------------- |
-| **resist** |                                                              | **WR** | **PR** | **profit** | **accuracy & recall**        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -      | -3.81%     | 1. chase rising              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7    | -0.43%     | 1.resist definition not good |
-| v1.02      | 1. pivot: slide windows + monostack<br />                    |        |        |            | 1.too decrete                |
-| v1.03      | 1. avoid volatility: news + ATR                              |        |        |            |                              |
-| v1.04      | 1. integrate news:<br /> https://www.forexfactory.com/       |        |        |            |                              |
+| strategy   | info                                                         | test   | (neutral | market)    | review                                                       |
+| ---------- | ------------------------------------------------------------ | ------ | -------- | ---------- | ------------------------------------------------------------ |
+| **resist** |                                                              | **WR** | **P/L**  | **profit** | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -        | -3.81%     | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7      | -0.43%     | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%    | 1.3      | 0.05%      | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. valid-test framework | 51%    | 1.76     | 1.91%      | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.4     |                                                              |        |          |            |                                                              |
+|            |                                                              |        |          |            |                                                              |
+|            | short order                                                  |        |          |            |                                                              |
+|            | avoid volatility: news + ATR<br />                           |        |          |            |                                                              |
+|            | integrate news:<br /> https://www.forexfactory.com/<br />    |        |          |            |                                                              |
 
 
 
@@ -120,45 +130,6 @@
 | ------------ | ------------- |
 | candle wick  | means strong? |
 | fill the gap |               |
-|              |               |
-
-> ## Candle Strength Index (CSI) — Design Concept
->
-> The **Candle Strength Index (CSI)** is an indicator that quantifies the bullish or bearish strength of a single candlestick using only OHLC data (Open, High, Low, Close). Its output ranges from -1 to 1:
->
-> - **+1** means very strong bullish candle.
-> - **-1** means very strong bearish candle.
-> - **0** means neutral, indecisive candle.
->
-> ### CSI Formula
->
-> CSI is a weighted sum of three components:
->
-> 1. **Entity Strength:** Measures the size and direction of the candle body.
-> 2. **Close Position Strength:** Measures how close the close price is to the high or low.
-> 3. **Shadow Strength (optional):** Measures how much of the candle’s range is taken up by the body.
->
-> **Mathematical Representation:**
->
-> CSI = α * Entity Strength + β * Close Position Strength + γ * Shadow Strength
->
-> Where α, β, γ are weights (e.g., α=0.5, β=0.3, γ=0.2).
->
-> #### Component Details
->
-> - **Entity Strength:**
->   `(Close - Open) / (High - Low)`
->   Indicates if the candle closed higher (bullish) or lower (bearish), and by how much compared to the candle’s total range.
-> - **Close Position Strength:**
->   `((2 * (Close - Low)) / (High - Low)) - 1`
->   Shows how close the close price is to the high (+1) or low (-1).
-> - **Shadow Strength:**
->   `1 - (|High - Close| + |Open - Low|) / (High - Low)`
->   Body size relative to the candle’s range; larger body = stronger conviction.
->
-> 
-
-
 
 
 
@@ -166,16 +137,13 @@
 
 
 
-
-
-# 回测
-
-- [ ] calc beta
-- [ ] minute-level backtest
+# live trading
 
 
 
-## 学习资源
+
+
+# 学习资源
 
 | --     | --                                                           |
 | ------ | ------------------------------------------------------------ |

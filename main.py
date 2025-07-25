@@ -3,12 +3,13 @@ import pandas as pd
 import warnings
 import os
 
-from strategy.Breakout import Breakout
+from strategy.breakout.SimpleBreakout import SimpleBreakout
 from strategy.ConsecNdays import ConsecNdays
 from utils.dataloader import load_data
 from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
+from utils.optimizer import GridSearchOptimizer
 
 # config
 config = load_config().get("backtest_config", {})
@@ -20,9 +21,52 @@ cash = config.get("cash", 100000.0)  # Default starting cash
 commission = config.get("commission", 0.00015)  # Default commission rate
 sizer = config.get("sizer", "FixedSize")  # Default sizer type
 fixed_size_stake = config.get("fixed_size_stake", 1)  # Default fixed size of shares
+OPTIMIZE_MODE = config.get("optimize_mode", False)  # 设置为True启用优化模式
 
+def run_optimization():
+    """运行参数优化"""
+    print("开始参数优化...")
+    
+    # 加载数据
+    data_feed = load_data(dataFile, start_date, end_date)
+    
+    # 创建优化器
+    optimizer = GridSearchOptimizer(
+        strategy_class=SimpleBreakout,
+        data_feed=data_feed,
+        cash=cash,
+        commission=commission,
+        stake=fixed_size_stake
+    )
+    
+    # 定义参数网格
+    param_grid = {
+        'window': [5, 8, 12, 16],
+        'threshold': [0.001, 0.002, 0.005],
+        'take_profit': [0.003, 0.005, 0.008],
+        'stop_loss': [0.002, 0.0025, 0.003],
+        'sma_period': [8, 10, 12, 20]
+    }
+    
+    # 执行优化
+    results_df = optimizer.optimize(param_grid)
+    
+    # 显示结果
+    print("\n=== 优化结果 (前10名) ===")
+    print(results_df.head(10).to_string(index=False))
+    
+    # 获取最佳参数
+    best_params = optimizer.get_best_params('total_return')  # 使用total_return而不是sharpe_ratio
+    print(f"\n=== 最佳参数组合 (按总收益率排序) ===")
+    for param, value in best_params.items():
+        print(f"{param}: {value}")
+    
+    # 保存结果
+    results_df.to_csv('utils/optimization_results.csv', index=False)
+    print("\n优化结果已保存到 optimization_results.csv")
 
-if __name__ == "__main__":
+def run_backtest():
+    """运行常规回测"""
     cerebro = bt.Cerebro()
     
     # load data
@@ -30,12 +74,8 @@ if __name__ == "__main__":
     cerebro.adddata(data_feed)
 
     # Add strategy
-    cerebro.addstrategy(
-        Breakout,
-        window=12,
-        threshold=0.001
-    )
-    # cerebro.addstrategy(SMAStrategy)
+    # cerebro.addstrategy(SMAStrategy) # baseline: SMAStrategy
+    cerebro.addstrategy(SimpleBreakout)
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
@@ -50,7 +90,7 @@ if __name__ == "__main__":
     # Run backtest
     result = cerebro.run()
 
-    # Plot results、
+    # 显示结果
     print('----------------------backtesting results----------------------')
     print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
     print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
@@ -62,9 +102,14 @@ if __name__ == "__main__":
     print('Final Profit Rate: {:.2%}'.format(profit_rate))
     warnings.filterwarnings("ignore", category=UserWarning, module="backtrader.plot.locator")
     cerebro.plot(
-        style='candlestick',      # 设置显示为蜡烛图
-        bgcolor='white',          # 设置背景色
-        tight_layout=True,        # 紧凑布局
-        # volume=False              # 不画成交量
+        style='candlestick',
+        bgcolor='white',
+        tight_layout=True,
     )
+
+if __name__ == "__main__":
+    if OPTIMIZE_MODE:
+        run_optimization()
+    else:
+        run_backtest()
 
