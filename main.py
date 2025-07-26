@@ -44,11 +44,12 @@ def run_optimization():
     
     # 定义参数网格
     param_grid = {
-        'window': [5, 8, 12, 16],
+        'window': [8, 12, 16],
         'threshold': [0.001, 0.002, 0.005],
-        'take_profit': [0.003, 0.005, 0.008],
-        'stop_loss': [0.002, 0.0025, 0.003],
-        'sma_period': [8, 10, 12, 20]
+        'max_hold_bars': [6, 15, 24],
+        'take_profit': [0.004, 0.006, 0.008],
+        'stop_loss': [0.002, 0.003, 0.005],
+        'sma_period': [10, 20]
     }
     
     # 执行优化

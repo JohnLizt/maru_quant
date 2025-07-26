@@ -17,8 +17,7 @@ class SimpleBreakout(bt.Strategy):
 
     def __init__(self):
         self.resistance = PivotHigh(self.data, window=self.params.window, threshold=self.params.threshold)
-        # self.sma = bt.indicators.SimpleMovingAverage(self.data.close, period=self.params.sma_period)
-        self.ema = bt.indicators.ExponentialMovingAverage(self.data.close, period=self.params.sma_period)
+        self.sma = bt.indicators.SimpleMovingAverage(self.data.close, period=self.params.sma_period)
 
         self.dataclose = self.datas[0].close
         self.order = None
@@ -38,8 +37,8 @@ class SimpleBreakout(bt.Strategy):
                 resist_value = getattr(self.resistance.lines, resist_name)[0]
                 
                 # 如果阻力位有效且日内突破（开盘价 < 阻力位，收盘价 > 阻力位）
-                if not pd.isna(resist_value) and self.ema[-1] < resist_value < self.ema[0]:
-                    self.log(f'[信号]：均线突破阻力位 {resist_name}={resist_value:.2f}， 均线价格 {self.ema[0]:.2f}，执行买入')
+                if not pd.isna(resist_value) and self.sma[-1] < resist_value < self.sma[0]:
+                    self.log(f'[信号]：均线突破阻力位 {resist_name}={resist_value:.2f}， 均线价格 {self.sma[0]:.2f}，执行买入')
                     self.order = self.buy()
                     break  # 只要有一个阻力位被突破就执行买入
         else:
