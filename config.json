@@ -1,6 +1,6 @@
 {
   "backtest_config": {
-    "file": "data/OANDA_XAUUSD, 30_monthly.csv",
+    "file": "data/test/OANDA_XAUUSD, 30_yearly_uptrend.csv",
     "optimize_mode": false,
     "start_date": "",
     "end_date": "",

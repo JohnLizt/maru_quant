@@ -53,11 +53,11 @@ def run_optimization():
     
     # 定义参数网格
     param_grid = {
-        'window': [8, 12, 16],
-        'threshold': [0.001, 0.002, 0.005],
-        'max_hold_bars': [6, 15, 24],
-        'take_profit': [0.004, 0.006, 0.008],
-        'stop_loss': [0.002, 0.003, 0.005],
+        'window': [6, 12, 16],
+        'threshold': [0.001, 0.002, 0.004],
+        'max_hold_bars': [12, 24, -1],
+        'take_profit': [25, 30, 35],
+        'stop_loss': [15, 20, 25],
         'sma_period': [10, 20]
     }
     
@@ -88,9 +88,7 @@ def run_backtest():
 
     # Add strategy
     # cerebro.addstrategy(SMAStrategy) # baseline: SMAStrategy
-    cerebro.addstrategy(
-        SimpleBreakout
-        )
+    cerebro.addstrategy(SimpleBreakout)
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash

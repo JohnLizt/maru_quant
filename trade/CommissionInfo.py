@@ -17,6 +17,9 @@ def create_commission_info():
     leverage = broker_config.get('leverage', 200.0)
     automargin = 1.0 / leverage if leverage > 0 else 0.005
     
+    # 读取点差
+    spread = broker_config.get('spread', 0.16)
+    
     # 动态创建类
     class IBKR_XAUUSD_Commission(bt.CommInfoBase):
         params = (
@@ -27,6 +30,7 @@ def create_commission_info():
             ('stocklike', False),  # 期货合约，非股票
             ('automargin', automargin),  # 根据杠杆自动计算
             ('leverage', leverage),
+            ('spread', spread),  # 添加点差参数
         )
         
         def getoperationcost(self, size, price):
@@ -38,8 +42,15 @@ def create_commission_info():
             return abs(size) * self.get_margin(price)
         
         def profitandloss(self, size, price, newprice):
-            """重写盈亏计算 - 期货需要乘以合约乘数"""
-            return size * (newprice - price) * self.p.mult
+            """重写盈亏计算 - 期货需要乘以合约乘数，并扣除点差成本"""
+            # 基础盈亏计算
+            base_pnl = size * (newprice - price) * self.p.mult
+            
+            # 扣除点差成本（每次开仓都要支付点差）
+            # 点差成本 = 点差 * 合约乘数 * 手数
+            spread_cost = abs(size) * self.p.spread * self.p.mult
+            
+            return base_pnl - spread_cost
     
     return IBKR_XAUUSD_Commission()
 
