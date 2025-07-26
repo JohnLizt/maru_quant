@@ -89,7 +89,7 @@ def run_backtest():
         cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)  # Default to 10% of cash
 
     # add analyzers
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
+    cerebro.addanalyzer(bt.analyzers.SharpeRatio)
     cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
     cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
 
@@ -98,7 +98,7 @@ def run_backtest():
 
     # 显示结果
     print('----------------------backtesting results----------------------')
-    print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
+    # print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
     print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())

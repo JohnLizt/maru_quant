@@ -64,7 +64,7 @@
 
 
 
-## breakout
+## breakout ⭐
 
 > 压力位/支撑位的本质：**群体心理学**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。
 >
@@ -74,17 +74,18 @@
 >
 > **震荡市会非常难受**，上涨/下跌行情表现较好
 
-- [x] how to define resist & support?
+- [x] indicator: how to define resist & support?
+
   - [x] extreme value
   - [x] pivot high/low
-
-- [ ] resist / support intensity
-
+  - [ ] resist / support intensity
   - [ ] multi-scale
 
-- [ ] turn over signal
+- [ ] breakout signal
 
   - [x] CSI
+
+  - [x] SMA crossover resist
 
   - [ ] CISD? wick must be filled, 80%
 
@@ -94,33 +95,34 @@
 
   - [ ] consider resist turn to support when break
 
-- [ ] take profit / stop loss
+- [ ] trade
+
+  - [x] take profit / stop loss
 
 - [ ] trend tracking
 
   - [ ] recognize left side / right side (via news or sth)
 
 - [ ] optimization
-  - [x] trading frequency (30min, 1h)
-  - [ ] parameterization
-    - [ ] dynamic param (eg. ATR)
-    - [x] grid search optimizer
-    - [ ] ML / DL
+  - [ ] higher frequency (10min?)
+  - [ ] dynamic param (eg. ATR)
+  - [x] grid search optimizer
+  - [ ] ML / DL
 
 
 
-| strategy   | info                                                         | test   | (neutral | market)    | review                                                       |
-| ---------- | ------------------------------------------------------------ | ------ | -------- | ---------- | ------------------------------------------------------------ |
-| **resist** |                                                              | **WR** | **P/L**  | **profit** | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -        | -3.81%     | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7      | -0.43%     | 1.resist definition not good                                 |
-| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%    | 1.3      | 0.05%      | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 51%    | 1.76     | 1.91%      | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     |                                                              |        |          |            |                                                              |
-|            |                                                              |        |          |            |                                                              |
-|            | short order                                                  |        |          |            |                                                              |
-|            | avoid volatility: news + ATR<br />                           |        |          |            |                                                              |
-|            | integrate news:<br /> https://www.forexfactory.com/<br />    |        |          |            |                                                              |
+| strategy   | info                                                         | test (uptrend) |         |            | review                                                       |
+| ---------- | ------------------------------------------------------------ | -------------- | ------- | ---------- | ------------------------------------------------------------ |
+| **resist** |                                                              | **WR**         | **P/L** | **profit** | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -              | -       | -3.81%     | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33%         | 1.7     | -0.43%     | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%            | 1.3     | 0.05%      | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 45%            | 1.8     | 5.6%       | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.4     |                                                              |                |         |            |                                                              |
+|            |                                                              |                |         |            |                                                              |
+|            | short order                                                  |                |         |            |                                                              |
+|            | avoid volatility: news + ATR<br />                           |                |         |            |                                                              |
+|            | integrate news:<br /> https://www.forexfactory.com/<br />    |                |         |            |                                                              |
 
 
 
