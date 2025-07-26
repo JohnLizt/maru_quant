@@ -109,7 +109,7 @@
 
 
 
-| strategy   | info                                                         | test   | (neutral | market)    | review                                                       |
+| strategy   | info                                                         | test   | (uptrend | market)    | review                                                       |
 | ---------- | ------------------------------------------------------------ | ------ | -------- | ---------- | ------------------------------------------------------------ |
 | **resist** |                                                              | **WR** | **P/L**  | **profit** | **accuracy & recall**                                        |
 | v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -        | -3.81%     | 1. chase rising                                              |
