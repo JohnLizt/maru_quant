@@ -87,3 +87,12 @@ class SimpleBreakout(bt.Strategy):
 
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
                  (trade.pnl, trade.pnlcomm))
+    
+    def stop(self):
+        # print params
+        self.log('Strategy Parameters:')
+        for param, value in self.params._getkwargs().items():
+            self.log(f'{param}: {value}')
+        # print final value
+        self.log('Ending Value %.2f' % self.broker.getvalue())
+

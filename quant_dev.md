@@ -115,7 +115,7 @@
 | v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -      | -        | -3.81%     | 1. chase rising                                              |
 | v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33% | 1.7      | -0.43%     | 1.resist definition not good                                 |
 | v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%    | 1.3      | 0.05%      | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. valid-test framework | 51%    | 1.76     | 1.91%      | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 51%    | 1.76     | 1.91%      | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
 | v1.0.4     |                                                              |        |          |            |                                                              |
 |            |                                                              |        |          |            |                                                              |
 |            | short order                                                  |        |          |            |                                                              |

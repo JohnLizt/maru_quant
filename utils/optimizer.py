@@ -5,12 +5,14 @@ from typing import Dict, List, Any, Tuple
 import warnings
 
 class GridSearchOptimizer:
-    def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1):
+    def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100):
         self.strategy_class = strategy_class
         self.data_feed = data_feed
         self.cash = cash
         self.commission = commission
         self.stake = stake
+        self.sizer_type = sizer_type
+        self.size_percent = size_percent
         self.results = []
     
     def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate']) -> pd.DataFrame:
@@ -66,12 +68,16 @@ class GridSearchOptimizer:
             # 设置broker参数
             cerebro.broker.setcash(self.cash)
             cerebro.broker.setcommission(self.commission)
-            cerebro.addsizer(bt.sizers.FixedSize, stake=self.stake)
+            
+            # 根据sizer类型添加相应的sizer
+            if self.sizer_type == "fixed":
+                cerebro.addsizer(bt.sizers.FixedSize, stake=self.stake)
+            elif self.sizer_type == "percents":
+                cerebro.addsizer(bt.sizers.PercentSizerInt, percents=self.size_percent)
             
             # 添加分析器
             cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
             cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
-            cerebro.addanalyzer(bt.analyzers.Returns, _name='returns')
             
             # 运行回测
             with warnings.catch_warnings():

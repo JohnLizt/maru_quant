@@ -19,7 +19,8 @@ start_date = config.get("start_date")
 end_date = config.get("end_date")
 cash = config.get("cash", 100000.0)  # Default starting cash
 commission = config.get("commission", 0.00015)  # Default commission rate
-sizer = config.get("sizer", "FixedSize")  # Default sizer type
+sizer = config.get("sizer", "percents")  # Default sizer type
+size_percent = config.get("size_percent", 100)  # Default size percent
 fixed_size_stake = config.get("fixed_size_stake", 1)  # Default fixed size of shares
 OPTIMIZE_MODE = config.get("optimize_mode", False)  # 设置为True启用优化模式
 
@@ -36,7 +37,9 @@ def run_optimization():
         data_feed=data_feed,
         cash=cash,
         commission=commission,
-        stake=fixed_size_stake
+        stake=fixed_size_stake,
+        sizer_type=sizer,
+        size_percent=size_percent
     )
     
     # 定义参数网格
@@ -80,7 +83,10 @@ def run_backtest():
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
     cerebro.broker.setcommission(commission)  # 0.015% commission
-    cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
+    if sizer == "fixed":
+        cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
+    elif sizer == "percents":
+        cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)  # Default to 10% of cash
 
     # add analyzers
     cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
