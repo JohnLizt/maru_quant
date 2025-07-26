@@ -13,13 +13,14 @@ class SimpleBreakout(bt.Strategy):
         ('take_profit', 0.008),  # 止盈率，默认0.5%
         ('stop_loss', 0.003),    # 止损率，默认0.25%
         ('sma_period', 10),  # 均线周期，默认20
+        ('spread', 0.16)  # 外汇/大宗商品点差
     )
 
     def __init__(self):
         self.resistance = PivotHigh(self.data, window=self.params.window, threshold=self.params.threshold)
         # self.sma = bt.indicators.SimpleMovingAverage(self.data.close, period=self.params.sma_period)
         self.ema = bt.indicators.ExponentialMovingAverage(self.data.close, period=self.params.sma_period)
-
+        
         self.dataclose = self.datas[0].close
         self.order = None
         self.buyprice = None
@@ -32,7 +33,8 @@ class SimpleBreakout(bt.Strategy):
 
         # Check if we are in the market
         if not self.position:
-            # 检查所有阻力位是否被突破
+            # buy signal: 检查所有阻力位是否被突破
+            buy_signal = False
             resist_lines = ['resist0', 'resist1', 'resist2', 'resist3', 'resist4']
             for resist_name in resist_lines:
                 resist_value = getattr(self.resistance.lines, resist_name)[0]
@@ -40,8 +42,11 @@ class SimpleBreakout(bt.Strategy):
                 # 如果阻力位有效且日内突破（开盘价 < 阻力位，收盘价 > 阻力位）
                 if not pd.isna(resist_value) and self.ema[-1] < resist_value < self.ema[0]:
                     self.log(f'[信号]：均线突破阻力位 {resist_name}={resist_value:.2f}， 均线价格 {self.ema[0]:.2f}，执行买入')
-                    self.order = self.buy()
+                    buy_signal = True
                     break  # 只要有一个阻力位被突破就执行买入
+            
+            if buy_signal:
+                self.order = self.buy(price=self.dataclose[0] + self.params.spread)  # 加上点差
         else:
             # 使用公共的持仓管理逻辑
             takeProfitStopLoss(self, take_profit=self.params.take_profit, stop_loss=self.params.stop_loss)
@@ -59,22 +64,33 @@ class SimpleBreakout(bt.Strategy):
         # Check if an order has been completed
         # Attention: broker could reject order if not enough cash
         if order.status in [order.Completed]:
+            comminfo = self.broker.getcommissioninfo(self.data)
+            margin_per_lot = comminfo.get_margin(order.executed.price * comminfo.p.mult)
+            total_margin = abs(order.executed.size) * margin_per_lot
+            actual_value = order.executed.size * order.executed.price * comminfo.p.mult
             if order.isbuy():
                 self.log(
-                    'BUY EXECUTED, Price: %.2f, Size: %.0f, Cost: %.2f, Comm %.2f' %
+                    'BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
                     (order.executed.price,
                      order.executed.size,
-                     order.executed.value,
-                     order.executed.comm))
+                     total_margin,
+                     margin_per_lot,
+                     actual_value,
+                     order.executed.comm,
+                     self.broker.getcash()))
 
                 self.buyprice = order.executed.price
                 self.buycomm = order.executed.comm
             else:  # Sell
-                self.log('SELL EXECUTED, Price: %.2f, Size: %.0f, Cost: %.2f, Comm %.2f' %
-                         (order.executed.price,
-                          order.executed.size,
-                          order.executed.value,
-                          order.executed.comm))
+                self.log(
+                    'SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
+                    (order.executed.price,
+                     order.executed.size,
+                     total_margin,
+                     margin_per_lot,
+                     actual_value,
+                     order.executed.comm,
+                     self.broker.getcash()))
 
             self.bar_executed = len(self)
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
@@ -90,11 +106,11 @@ class SimpleBreakout(bt.Strategy):
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
                  (trade.pnl, trade.pnlcomm))
     
-    def stop(self):
-        # print params
-        self.log('Strategy Parameters:')
-        for param, value in self.params._getkwargs().items():
-            self.log(f'{param}: {value}')
-        # print final value
-        self.log('Ending Value %.2f' % self.broker.getvalue())
+    # def stop(self):
+    #     # print params
+    #     self.log('Strategy Parameters:')
+    #     for param, value in self.params._getkwargs().items():
+    #         self.log(f'{param}: {value}')
+    #     # print final value
+    #     self.log('Ending Value %.2f' % self.broker.getvalue())
 

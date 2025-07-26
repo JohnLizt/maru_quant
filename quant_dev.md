@@ -86,7 +86,7 @@
 
   - [x] SMA crossover resist
 
-    - [ ] EMA
+    - [x] EMA
 
   - [ ] multi-scale
 
@@ -104,11 +104,14 @@
 
   - [x] take profit / stop loss
     - [ ] ATR dynamic param
-  - [x] profit calc should multi leverage
+  - [ ] signal intensity based size
+
+- [ ] live trading
 
 - [ ] trend tracking
 
   - [ ] recognize left side / right side (via news or sth)
+  - [ ] avoid volatility (via news)  https://www.forexfactory.com/<
 
 - [ ] optimization
   - [ ] higher frequency (10min?)
@@ -125,11 +128,9 @@
 | v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33%         | 1.7     | -0.43%     | 1.resist definition not good                                 |
 | v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%            | 1.3     | 0.05%      | 1.too decrete                                                |
 | v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 45%            | 1.8     | 5.6%       | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma, kama...                            |                |         |            | 1.fake breakout                                              |
+| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage) |                |         |            | 1.fake breakout                                              |
 |            |                                                              |                |         |            |                                                              |
-|            | short order                                                  |                |         |            |                                                              |
-|            | avoid volatility: news + ATR<br />                           |                |         |            |                                                              |
-|            | integrate news:<br /> https://www.forexfactory.com/<br />    |                |         |            |                                                              |
+|            | impl short order                                             |                |         |            |                                                              |
 
 
 

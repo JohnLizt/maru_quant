@@ -21,6 +21,6 @@ def takeProfitStopLoss(strategy, take_profit=0.005, stop_loss=0.003):
         closed = True
     
     if closed:
-        strategy.order = strategy.sell()
+        strategy.order = strategy.close()
     else:
         strategy.log(f'[持仓中]：当前价格 {current_price:.2f}，利润率 {profit_rate:.2%}，持仓时间 {holding_bars}')

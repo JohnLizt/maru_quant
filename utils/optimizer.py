@@ -3,9 +3,10 @@ import itertools
 import pandas as pd
 from typing import Dict, List, Any, Tuple
 import warnings
+from trade.CommissionInfo import comm_ibkr_XAUUSD
 
 class GridSearchOptimizer:
-    def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100):
+    def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100, tick_type="stock"):
         self.strategy_class = strategy_class
         self.data_feed = data_feed
         self.cash = cash
@@ -13,6 +14,7 @@ class GridSearchOptimizer:
         self.stake = stake
         self.sizer_type = sizer_type
         self.size_percent = size_percent
+        self.tick_type = tick_type
         self.results = []
     
     def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate']) -> pd.DataFrame:
@@ -67,7 +69,12 @@ class GridSearchOptimizer:
             
             # 设置broker参数
             cerebro.broker.setcash(self.cash)
-            cerebro.broker.setcommission(self.commission)
+            
+            # Set commission based on tick type
+            if self.tick_type == "futures":
+                cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
+            else:
+                cerebro.broker.setcommission(self.commission)
             
             # 根据sizer类型添加相应的sizer
             if self.sizer_type == "fixed":

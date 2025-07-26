@@ -1,3 +1,4 @@
+from pprint import pprint
 import backtrader as bt
 import pandas as pd
 import warnings
@@ -10,19 +11,26 @@ from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
 from utils.optimizer import GridSearchOptimizer
+from trade.CommissionInfo import comm_ibkr_XAUUSD
 
 # config
-config = load_config().get("backtest_config", {})
+config = load_config()
+backtest_config = config.get("backtest_config", {})
+broker_config = config.get("broker_config", {})
 
-dataFile = config.get("file")
-start_date = config.get("start_date")
-end_date = config.get("end_date")
-cash = config.get("cash", 100000.0)  # Default starting cash
-commission = config.get("commission", 0.00015)  # Default commission rate
-sizer = config.get("sizer", "percents")  # Default sizer type
-size_percent = config.get("size_percent", 100)  # Default size percent
-fixed_size_stake = config.get("fixed_size_stake", 1)  # Default fixed size of shares
-OPTIMIZE_MODE = config.get("optimize_mode", False)  # 设置为True启用优化模式
+dataFile = backtest_config.get("file")
+start_date = backtest_config.get("start_date")
+end_date = backtest_config.get("end_date")
+sizer = backtest_config.get("sizer", "percents")  # Default sizer type
+size_percent = backtest_config.get("size_percent", 100)  # Default size percent
+fixed_size_stake = backtest_config.get("fixed_size_stake", 1)  # Default fixed size of shares
+OPTIMIZE_MODE = backtest_config.get("optimize_mode", False)  # 设置为True启用优化模式
+
+# broker config
+tick_type = broker_config.get("tick_type", "stock")
+cash = broker_config.get("cash", 100000.0)  # Default starting cash
+commission = broker_config.get("commission_rate", 0.00015)  # Default commission rate
+spread = broker_config.get("spread", 0.16)  # Default spread
 
 def run_optimization():
     """运行参数优化"""
@@ -39,7 +47,8 @@ def run_optimization():
         commission=commission,
         stake=fixed_size_stake,
         sizer_type=sizer,
-        size_percent=size_percent
+        size_percent=size_percent,
+        tick_type=tick_type
     )
     
     # 定义参数网格
@@ -79,11 +88,24 @@ def run_backtest():
 
     # Add strategy
     # cerebro.addstrategy(SMAStrategy) # baseline: SMAStrategy
-    cerebro.addstrategy(SimpleBreakout)
+    cerebro.addstrategy(
+        SimpleBreakout
+        )
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
-    cerebro.broker.setcommission(commission)  # 0.015% commission
+    
+    # Set commission based on tick type
+    if tick_type == "futures":
+        cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
+        print("=== CommissionInfo 配置 ===")
+        print(f"佣金: ${comm_ibkr_XAUUSD.p.commission}")
+        print(f"合约乘数: {comm_ibkr_XAUUSD.p.mult}")
+        print(f"期货类型: {not comm_ibkr_XAUUSD.p.stocklike}")
+        print(f"资金 ${cash}")
+    else:
+        cerebro.broker.setcommission(commission)  # Default commission for stocks/forex
+    
     if sizer == "fixed":
         cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
     elif sizer == "percents":
