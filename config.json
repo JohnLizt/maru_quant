@@ -1,7 +1,7 @@
 {
   "backtest_config": {
-    "file": "data/test/OANDA_XAUUSD, 30_yearly_uptrend.csv",
-    "optimize_mode": false,
+    "file": "data/test/OANDA_XAUUSD, 30_half_year_downtrend.csv",
+    "optimize_mode": true,
     "start_date": "",
     "end_date": "",
     "sizer": "fixed",
@@ -20,9 +20,9 @@
   "download_config": {
     "twelvedata_config" : {
       "symbol": "XAU/USD",
-      "interval": "1h",
-      "start_datetime": "",
-      "end_datetime": "",
+      "interval": "30min",
+      "start_datetime": "2020-01-01 00:00:00",
+      "end_datetime": "2025-07-27 00:00:00",
       "outputsize": 5000,
       "timezone": "UTC",
       "api_key": "142f9b8c199d4a47839f26a13c859b21"

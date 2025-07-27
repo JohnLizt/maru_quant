@@ -128,9 +128,9 @@
 | v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33%         | 1.7     | -0.43%     | 1.resist definition not good                                 |
 | v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%            | 1.3     | 0.05%      | 1.too decrete                                                |
 | v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 45%            | 1.8     | 5.6%       | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders | 51%            | 1.3     | 200%       | 1.fake breakout                                              |
-| v1.0.5     | 1.impl short order- trend tracking<br />2. build trainset, testset |                |         |            |                                                              |
-|            |                                                              |                |         |            |                                                              |
+| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders | 51%            | 1.3     | 200%       | 1.fake breakout<br />2.take profit/ stop loss too fierce, not smooth |
+| v1.0.5     | 1. build trainset, testset, baseline <br />                  |                |         |            |                                                              |
+| v1.0.6     | 1. impl short order- trend tracking<br />2. take profit / stop los |                |         |            |                                                              |
 
 
 

@@ -53,12 +53,12 @@ def run_optimization():
     
     # 定义参数网格
     param_grid = {
-        'window': [6, 12, 16],
-        'threshold': [0.001, 0.002, 0.004],
-        'max_hold_bars': [12, 24, -1],
-        'take_profit': [25, 30, 35],
-        'stop_loss': [15, 20, 25],
-        'sma_period': [10, 20]
+        'window': [6, 12, 16, 20],
+        'threshold': [0.001],
+        'max_hold_bars': [24],
+        'take_profit': [20, 25, 30, 35, 40, 45],
+        'stop_loss': [10, 15, 20, 25, 30],
+        'sma_period': [20]
     }
     
     # 执行优化
@@ -75,8 +75,8 @@ def run_optimization():
         print(f"{param}: {value}")
     
     # 保存结果
-    results_df.to_csv('utils/optimization_results.csv', index=False)
-    print("\n优化结果已保存到 optimization_results.csv")
+    results_df.to_csv('utils/optimize_result/optimization_results.csv', index=False)
+    print("\n优化结果已保存到 utils/optimize_result/optimization_results.csv")
 
 def run_backtest():
     """运行常规回测"""
