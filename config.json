@@ -1,12 +1,23 @@
 {
   "backtest_config": {
-    "file": "data/XAUUSD_30_2020-01-01-2025-07-27.csv",
-    "optimize_mode": false,
-    "start_date": "",
-    "end_date": "",
-    "sizer": "fixed",
-    "size_percent": 30,
-    "fixed_size_stake": 0.01
+    "basic" : {
+      "file": "data/OANDA_XAUUSD, 30_a6bf1.csv",
+      "start_date": "",
+      "end_date": ""
+    },
+    "sizer" : {
+      "sizer": "fixed",
+      "size_percent": 30,
+      "fixed_size_stake": 0.01
+    },
+    "optimize" : {
+      "optimize_mode": false
+    },
+    "validation" : {
+      "walk_forward_mode": false,
+      "train_quarters" : 3,
+      "test_quarters" : 1
+    }
   },
   "broker_config": {
     "tick_type": "futures",

@@ -2,8 +2,7 @@ import backtrader as bt
 import itertools
 import pandas as pd
 from typing import Dict, List, Any, Tuple
-import warnings
-from trade.CommissionInfo import comm_ibkr_XAUUSD
+from utils.backtest_runner import run_backtest_with_params
 
 class GridSearchOptimizer:
     def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100, tick_type="stock"):
@@ -17,7 +16,7 @@ class GridSearchOptimizer:
         self.tick_type = tick_type
         self.results = []
     
-    def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate']) -> pd.DataFrame:
+    def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio']) -> pd.DataFrame:
         """
         执行网格搜索优化
         
@@ -42,7 +41,18 @@ class GridSearchOptimizer:
             params = dict(zip(param_names, param_combo))
             
             # 运行单次回测
-            result = self._run_single_backtest(params)
+            result = run_backtest_with_params(
+                strategy_class=self.strategy_class,
+                data_feed=self.data_feed,
+                params=params,
+                cash=self.cash,
+                commission=self.commission,
+                stake=self.stake,
+                sizer_type=self.sizer_type,
+                size_percent=self.size_percent,
+                tick_type=self.tick_type
+            )
+
             if result:
                 result.update(params)  # 添加参数到结果中
                 self.results.append(result)
@@ -51,89 +61,30 @@ class GridSearchOptimizer:
         df_results = pd.DataFrame(self.results)
         if not df_results.empty:
             # 按利润降序排列
-            if 'total_return' in df_results.columns:
-                df_results = df_results.sort_values('total_return', ascending=False)
+            if 'sharpe_ratio' in df_results.columns:
+                df_results = df_results.sort_values('sharpe_ratio', ascending=False)
 
         return df_results
     
-    def _run_single_backtest(self, params: Dict[str, Any]) -> Dict[str, float]:
-        """运行单次回测"""
-        try:
-            cerebro = bt.Cerebro()
-            
-            # 添加数据
-            cerebro.adddata(self.data_feed)
-            
-            # 添加策略和参数
-            cerebro.addstrategy(self.strategy_class, **params)
-            
-            # 设置broker参数
-            cerebro.broker.setcash(self.cash)
-            
-            # Set commission based on tick type
-            if self.tick_type == "futures":
-                cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
-            else:
-                cerebro.broker.setcommission(self.commission)
-            
-            # 根据sizer类型添加相应的sizer
-            if self.sizer_type == "fixed":
-                cerebro.addsizer(bt.sizers.FixedSize, stake=self.stake)
-            elif self.sizer_type == "percents":
-                cerebro.addsizer(bt.sizers.PercentSizerInt, percents=self.size_percent)
-            
-            # 添加分析器
-            cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
-            cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
-            
-            # 运行回测
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                result = cerebro.run()
-            
-            # 提取指标
-            strat = result[0]
-            final_value = cerebro.broker.getvalue()
-            
-            return {
-                'sharpe_ratio': strat.analyzers.sharpe_ratio.get_analysis().get('sharperatio', 0),
-                'total_return': (final_value - self.cash) / self.cash,
-                'max_drawdown': strat.analyzers.drawdown.get_analysis().get('max', {}).get('drawdown', 0),
-                'final_value': final_value
-            }
-            
-        except Exception as e:
-            print(f"回测失败，参数: {params}, 错误: {str(e)}")
-            return None
-    
-    def get_best_params(self, metric='total_return') -> Dict[str, Any]:
+    def get_best_params(self, metric='sharpe_ratio') -> Dict[str, Any]:
         """获取最佳参数组合"""
         if not self.results:
             return {}
         
-        df_results = pd.DataFrame(self.results)
-        if metric not in df_results.columns:
+        # 直接从results列表中找最佳结果，避免pandas类型转换
+        best_result = None
+        best_metric_value = float('-inf')
+        
+        for result in self.results:
+            if metric in result and result[metric] > best_metric_value:
+                best_metric_value = result[metric]
+                best_result = result
+        
+        if best_result is None:
             return {}
-        
-        # 处理NaN值 - 使用total_return作为备选指标
-        if df_results[metric].isna().all():
-            print(f"警告: {metric} 全部为NaN，使用 total_return 作为备选指标")
-            metric = 'total_return'
-            if df_results[metric].isna().all():
-                print("错误: 所有指标都为NaN，无法选择最佳参数")
-                return {}
-        
-        # 过滤掉NaN值
-        valid_data = df_results.dropna(subset=[metric])
-        if valid_data.empty:
-            print(f"错误: {metric} 没有有效数据")
-            return {}
-        
-        best_idx = valid_data[metric].idxmax()
-        best_result = valid_data.loc[best_idx]
-        
+
         # 提取参数（排除指标列）
-        metric_cols = ['sharpe_ratio', 'total_return', 'max_drawdown', 'final_value']
-        param_cols = [col for col in df_results.columns if col not in metric_cols]
+        metric_cols = ['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio']
+        param_dict = {k: v for k, v in best_result.items() if k not in metric_cols}
         
-        return {col: best_result[col] for col in param_cols}
+        return param_dict

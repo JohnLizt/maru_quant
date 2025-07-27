@@ -6,7 +6,7 @@ from backtrader.analyzers import TimeReturn
 from backtrader.mathsupport import average, standarddev
 from backtrader.utils.py3 import itervalues
 
-class SharpeRatio_30min(bt.Analyzer):
+class RobustSharpe_30min(bt.Analyzer):
     params = (
         ('riskfreerate', 0.0),  # 无风险利率（黄金交易通常设为0）
         ('factor', 252 * 23 * 2),  # 30分钟年化因子：252个交易日 * 23小时 * 2个30分钟
@@ -27,7 +27,7 @@ class SharpeRatio_30min(bt.Analyzer):
         self.rets = {}
         
     def stop(self):
-        super(SharpeRatio_30min, self).stop()
+        super(RobustSharpe_30min, self).stop()
         
         # 从TimeReturn分析器获取收益率
         returns = list(itervalues(self.timereturn.get_analysis()))
@@ -45,14 +45,13 @@ class SharpeRatio_30min(bt.Analyzer):
             try:
                 # 计算超额收益
                 ret_free = [r - rate for r in returns]
-                ret_free_avg = average(ret_free)
-                retdev = standarddev(ret_free, avgx=ret_free_avg,
-                                   bessel=self.p.stddev_sample)
-                
-                if retdev == 0:
+                ret_free_median = np.median(ret_free)
+                mad = np.median([abs(r - ret_free_median) for r in ret_free])
+
+                if mad == 0:
                     ratio = None
                 else:
-                    ratio = ret_free_avg / retdev
+                    ratio = ret_free_median / mad
                     
                     # 如果需要年化
                     if factor is not None and self.p.annualize:

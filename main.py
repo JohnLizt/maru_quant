@@ -4,6 +4,7 @@ import pandas as pd
 import warnings
 import os
 
+from analyzer.robustsharpe_30min import RobustSharpe_30min
 from analyzer.sharperatio_30min import SharpeRatio_30min
 from strategy.breakout.SimpleBreakout import SimpleBreakout
 from strategy.showdata import ShowData
@@ -13,24 +14,35 @@ from strategy.SMAStrategy import SMAStrategy
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
 from utils.optimizer import GridSearchOptimizer
 from trade.CommissionInfo import comm_ibkr_XAUUSD
+from utils.walkforward import WalkForwardAnalyzer
 
 # config
 config = load_config()
 backtest_config = config.get("backtest_config", {})
 broker_config = config.get("broker_config", {})
 
-dataFile = backtest_config.get("file")
-start_date = backtest_config.get("start_date")
-end_date = backtest_config.get("end_date")
-sizer = backtest_config.get("sizer", "percents")  # Default sizer type
-size_percent = backtest_config.get("size_percent", 100)  # Default size percent
-fixed_size_stake = backtest_config.get("fixed_size_stake", 1)  # Default fixed size of shares
-OPTIMIZE_MODE = backtest_config.get("optimize_mode", False)  # 设置为True启用优化模式
+# backtest config
+basic_config = backtest_config.get("basic", {})
+sizer_config = backtest_config.get("sizer", {})
+optimize_config = backtest_config.get("optimize", {})
+validation_config = backtest_config.get("validation", {})
+
+dataFile = basic_config.get("file")
+start_date = basic_config.get("start_date")
+end_date = basic_config.get("end_date")
+sizer = sizer_config.get("sizer", "percents")  # Default sizer type
+size_percent = sizer_config.get("size_percent", 100)  # Default size percent
+fixed_size_stake = sizer_config.get("fixed_size_stake", 1)  # Default fixed size of shares
+OPTIMIZE_MODE = optimize_config.get("optimize_mode", False)  # 设置为True启用优化模式
+WALK_FORWARD_MODE = validation_config.get("walk_forward_mode", False)  # Walk-Forward模式
 
 # broker config
 tick_type = broker_config.get("tick_type", "stock")
+multiplier = broker_config.get("multiplier", 1)
 cash = broker_config.get("cash", 100000.0)  # Default starting cash
-commission = broker_config.get("commission_rate", 0.00015)  # Default commission rate
+leverage = broker_config.get("leverage", 1.0)
+fixed_commission = broker_config.get("fixed_commission", False)
+commission = broker_config.get("commission", 0.00015)  # Default commission rate
 spread = broker_config.get("spread", 0.16)  # Default spread
 
 def run_backtest():
@@ -66,7 +78,6 @@ def run_backtest():
         cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)  # Default to 10% of cash
 
     # add analyzers
-    # cerebro.addanalyzer(bt.analyzers.SharpeRatio)
     cerebro.addanalyzer(SharpeRatio_30min, _name='sharpe_ratio')
     cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
     cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
@@ -78,8 +89,8 @@ def run_backtest():
     print('----------------------backtesting results----------------------')
     print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
     print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
-    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
+    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     
     end_value = cerebro.broker.getvalue()
     profit_rate = (end_value - cash) / cash
@@ -128,8 +139,8 @@ def run_optimization():
     print(results_df.head(10).to_string(index=False))
     
     # 获取最佳参数
-    best_params = optimizer.get_best_params('total_return')  # 使用total_return而不是sharpe_ratio
-    print(f"\n=== 最佳参数组合 (按总收益率排序) ===")
+    best_params = optimizer.get_best_params('sharpe_ratio')
+    print(f"\n=== 最佳参数组合 (按夏普比率排序) ===")
     for param, value in best_params.items():
         print(f"{param}: {value}")
     
@@ -137,8 +148,59 @@ def run_optimization():
     results_df.to_csv('utils/optimize_result/optimization_results.csv', index=False)
     print("\n优化结果已保存到 utils/optimize_result/optimization_results.csv")
 
+
+def run_walk_forward():
+    """运行Walk-Forward Analysis"""
+    print("运行Walk-Forward Analysis...")
+    
+    # 创建分析器
+    wf_analyzer = WalkForwardAnalyzer(
+        strategy_class=SimpleBreakout,
+        data_file=dataFile,
+        start_date=start_date,
+        end_date=end_date,
+        cash=cash,
+        commission=commission,
+        stake=fixed_size_stake,
+        sizer_type=sizer,
+        size_percent=size_percent,
+        tick_type=tick_type
+    )
+    
+    # 定义参数网格
+    param_grid = {
+        'window': [16],
+        'threshold': [0.001],
+        'take_profit': [30],
+        'stop_loss': [15],
+        'sma_period': [20]
+    }
+    
+    # 执行Walk-Forward分析
+    wf_analyzer.run_walk_forward_analysis(
+        param_grid=param_grid,
+        train_quarters=validation_config.get("train_quarters", 2),  # Use config value
+        test_quarters=validation_config.get("test_quarters", 1)     # Use config value
+    )
+    
+    # 显示汇总统计
+    summary_stats = wf_analyzer.get_summary_statistics()
+    print("\n=== Walk-Forward Analysis 汇总统计 ===")
+    for key, value in summary_stats.items():
+        if isinstance(value, float):
+            print(f"{key}: {value:.4f}")
+        else:
+            print(f"{key}: {value}")
+    
+    # 保存结果
+    wf_analyzer.save_results()
+    
+    return wf_analyzer
+
 if __name__ == "__main__":
-    if OPTIMIZE_MODE:
+    if WALK_FORWARD_MODE:
+        run_walk_forward()
+    elif OPTIMIZE_MODE:
         run_optimization()
     else:
         run_backtest()
