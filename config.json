@@ -1,7 +1,7 @@
 {
   "backtest_config": {
-    "file": "data/test/OANDA_XAUUSD, 30_half_year_downtrend.csv",
-    "optimize_mode": true,
+    "file": "data/XAUUSD_30_2020-01-01-2025-07-27.csv",
+    "optimize_mode": false,
     "start_date": "",
     "end_date": "",
     "sizer": "fixed",

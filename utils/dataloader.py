@@ -29,10 +29,8 @@ def load_data(dataFile, start_date=None, end_date=None):
             tf = bt.TimeFrame.Days
             comp = 1
 
-    time_col = "time"  # 你的数据首列为'time'
-
-    # Load data
-    dataframe = pd.read_csv(dataFile, parse_dates=[time_col], index_col=time_col)
+    # Load data - 自动使用第一列作为时间列
+    dataframe = pd.read_csv(dataFile, parse_dates=[0], index_col=0)
     dataframe.sort_index(inplace=True)
 
     # 修正Volume的NaN问题，如果没有Volume列则补充

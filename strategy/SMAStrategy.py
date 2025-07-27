@@ -29,7 +29,7 @@ class SMAStrategy(bt.Strategy):
         bt.indicators.ExponentialMovingAverage(self.datas[0], period=25)
         bt.indicators.WeightedMovingAverage(self.datas[0], period=25,
                                             subplot=True)
-        bt.indicators.StochasticSlow(self.datas[0])
+        # bt.indicators.StochasticSlow(self.datas[0]) # 有时候报除零错，不知道为啥
         bt.indicators.MACDHisto(self.datas[0])
         rsi = bt.indicators.RSI(self.datas[0])
         bt.indicators.SmoothedMovingAverage(rsi, period=10)

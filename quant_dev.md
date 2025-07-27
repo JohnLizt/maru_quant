@@ -45,7 +45,7 @@
 
 
 
-## **trend following**
+## **trend tracking**
 
 > 适用于上涨/下跌行情，震荡市容易出事
 
@@ -53,26 +53,15 @@
 
 > 本质上是趋势追踪（追涨杀跌），适用于上涨/下跌行情
 
+### breakout ⭐
 
-
-## event-driven
-
-### LLM-news
-
-* 早鸟策略：新闻发出时快速买入
-* 买预期卖事实：在“靴子落地”时，提前布局的主力获利了结，往往有预期反方向的动能
-
-
-
-## breakout ⭐
-
-> 压力位/支撑位的本质：**群体心理学**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。
+> 压力位/支撑位的本质：**集体意识**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。
 >
-> 参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。
+> 因此，如果在隔离环境下，我假设价格会一直在一个区间波动，类似三角函数；既然能突破区间，说明有外部力量影响，这种大的力量可能会形成趋势，从而有跟随的可能性。
 >
-> breakout策略核心思路是抓住成功突破后的一波行情，感觉上偏主观，信号要卡严一点，过滤掉大量的假突破、弱信号，后续持仓可以放宽
+> breakout策略核心思路是抓住成功突破后的一波行情，属于偏主观的趋势策略，**震荡市会非常难受**，上涨/下跌行情表现较好。
 >
-> **震荡市会非常难受**，上涨/下跌行情表现较好
+> 思路：信号要卡严一点，过滤掉大量的假突破、弱信号；止盈止损很重要，需要好好设置
 
 - [x] indicator: how to define resist & support?
 
@@ -114,6 +103,7 @@
   - [ ] avoid volatility (via news)  https://www.forexfactory.com/<
 
 - [ ] optimization
+
   - [ ] higher frequency (10min?)
   - [ ] dynamic param (eg. ATR)
   - [x] grid search optimizer
@@ -121,29 +111,31 @@
 
 
 
-| strategy   | info                                                         | test (uptrend) |         |            | review                                                       |
-| ---------- | ------------------------------------------------------------ | -------------- | ------- | ---------- | ------------------------------------------------------------ |
-| **resist** |                                                              | **WR**         | **P/L** | **profit** | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | -              | -       | -3.81%     | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 33.33%         | 1.7     | -0.43%     | 1.resist definition not good                                 |
-| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 47%            | 1.3     | 0.05%      | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 45%            | 1.8     | 5.6%       | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders | 51%            | 1.3     | 200%       | 1.fake breakout<br />2.take profit/ stop loss too fierce, not smooth |
-| v1.0.5     | 1. build trainset, testset, baseline <br />                  |                |         |            |                                                              |
-| v1.0.6     | 1. impl short order- trend tracking<br />2. take profit / stop los |                |         |            |                                                              |
-
-
-
-### candles theory
-
-| --           | --            |
-| ------------ | ------------- |
-| candle wick  | means strong? |
-| fill the gap |               |
+| strategy   | info                                                         | test   |         |            |           | review                                                       |
+| ---------- | ------------------------------------------------------------ | ------ | ------- | ---------- | --------- | ------------------------------------------------------------ |
+| **resist** |                                                              | **WR** | **P/L** | **sharpe** | **drawd** | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t |        |         |            |           | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss |        |         |            |           | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy |        |         |            |           | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management |        |         |            |           | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders |        |         |            |           | 1.fake breakout<br />2.take profit/ stop loss too fierce, not smooth |
+| v1.0.5     | 1. build test framework & baseline <br />                    |        |         |            |           |                                                              |
+| v1.0.6     | 1. impl short order- trend tracking<br />2. take profit / stop los |        |         |            |           |                                                              |
 
 
 
 ## multi factor
+
+
+
+## event-driven
+
+### LLM-news
+
+* 早鸟策略：新闻发出时快速买入
+* 买预期卖事实：在“靴子落地”时，提前布局的主力获利了结，往往有预期反方向的动能
+
+
 
 
 
@@ -160,4 +152,24 @@
 | 李不白 | [bilibili](https://space.bilibili.com/3546791769279104?spm_id_from=333.1387.follow.user_card.click) |
 |        | [red](https://www.xiaohongshu.com/user/profile/5f5eeab900000000010047bc?xsec_token=ABuufNWq0rQRznfAUzNjZ6-5ZJYu-DC1GR3Dyn8F34naM%3D&xsec_source=pc_search) |
 | 知乎   |                                                              |
+
+## candles theory
+
+| --           | --            |
+| ------------ | ------------- |
+| candle wick  | means strong? |
+| fill the gap |               |
+
+
+
+
+
+# 小本本
+
+```python
+# debug
+bt.num2date(self.datas[0].datetime[0]).strftime('%Y-%m-%d %H:%M:%S') == '2020-06-09 12:00:00'
+```
+
+
 

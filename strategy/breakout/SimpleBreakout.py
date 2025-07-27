@@ -27,6 +27,10 @@ class SimpleBreakout(bt.Strategy):
     def next(self):
         # Check if we are in the market
         if not self.position:
+            if self.bracket_orders:
+                self.log(f'ORDER PENDING, skip next') # 下市价单，一般不会走到这
+                return
+
             if self.break_signal():
                 self.bracket_orders = create_bracket_orders(self)
                 self.entry_bar = len(self)  # 记录开仓的bar索引
@@ -44,11 +48,13 @@ class SimpleBreakout(bt.Strategy):
 
 
     def notify_order(self, order):
+        # debug log
+        self.log('Order {}, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
         if order.status in [order.Submitted, order.Accepted]:
             return
 
         if order.status in [order.Completed]:
-            # 调试日志
+            # 打印日志
             comminfo = self.broker.getcommissioninfo(self.data)
             margin_per_lot = comminfo.get_margin(order.executed.price * comminfo.p.mult)
             total_margin = abs(order.executed.size) * margin_per_lot
@@ -57,12 +63,11 @@ class SimpleBreakout(bt.Strategy):
                 self.log('BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
                     (order.executed.price, order.executed.size, total_margin, margin_per_lot, actual_value, order.executed.comm, self.broker.getcash()))
             else: 
-                self.log('[SELL EXECUTED], Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
+                self.log('SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
                     (order.executed.price, order.executed.size, total_margin, margin_per_lot, actual_value, order.executed.comm, self.broker.getcash()))
 
-        elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-            self.log('Order {} CANCELED, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
-
+        # elif order.status in [order.Canceled, order.Margin, order.Rejected]:
+        #     self.log('Order {} CANCELED, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
 
         # 清理已完成或取消的订单
         if not order.alive() and order in self.bracket_orders:
@@ -92,5 +97,3 @@ class SimpleBreakout(bt.Strategy):
                 self.log(f'[信号]：均线突破阻力位 {resist_value:.2f}, 均线价格 {self.ema[0]:.2f}，执行买入')
                 return True
         return False
-
-

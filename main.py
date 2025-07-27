@@ -5,7 +5,7 @@ import warnings
 import os
 
 from strategy.breakout.SimpleBreakout import SimpleBreakout
-from strategy.ConsecNdays import ConsecNdays
+from strategy.showdata import ShowData
 from utils.dataloader import load_data
 from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
@@ -31,6 +31,63 @@ tick_type = broker_config.get("tick_type", "stock")
 cash = broker_config.get("cash", 100000.0)  # Default starting cash
 commission = broker_config.get("commission_rate", 0.00015)  # Default commission rate
 spread = broker_config.get("spread", 0.16)  # Default spread
+
+def run_backtest():
+    """运行常规回测"""
+    cerebro = bt.Cerebro()
+    
+    # load data
+    data_feed = load_data(dataFile, start_date, end_date)
+    cerebro.adddata(data_feed)
+
+    # Add strategy
+    # cerebro.addstrategy(ShowData)
+    cerebro.addstrategy(SMAStrategy) # baseline
+    # cerebro.addstrategy(SimpleBreakout)
+
+    # Set broker parameters
+    cerebro.broker.setcash(cash)  # Starting cash
+    
+    # Set commission based on tick type
+    if tick_type == "futures":
+        cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
+        print("=== CommissionInfo 配置 ===")
+        print(f"佣金: ${comm_ibkr_XAUUSD.p.commission}")
+        print(f"合约乘数: {comm_ibkr_XAUUSD.p.mult}")
+        print(f"期货类型: {not comm_ibkr_XAUUSD.p.stocklike}")
+        print(f"资金 ${cash}")
+    else:
+        cerebro.broker.setcommission(commission)  # Default commission for stocks/forex
+    
+    if sizer == "fixed":
+        cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
+    elif sizer == "percents":
+        cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)  # Default to 10% of cash
+
+    # add analyzers
+    cerebro.addanalyzer(bt.analyzers.SharpeRatio)
+    cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
+    cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
+
+    # Run backtest
+    result = cerebro.run()
+
+    # 显示结果
+    print('----------------------backtesting results----------------------')
+    # print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
+    print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
+    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
+    
+    end_value = cerebro.broker.getvalue()
+    profit_rate = (end_value - cash) / cash
+    print('Final Profit Rate: {:.2%}'.format(profit_rate))
+    warnings.filterwarnings("ignore", category=UserWarning, module="backtrader.plot.locator")
+    cerebro.plot(
+        style='candlestick',
+        bgcolor='white',
+        tight_layout=True,
+    )
 
 def run_optimization():
     """运行参数优化"""
@@ -77,62 +134,6 @@ def run_optimization():
     # 保存结果
     results_df.to_csv('utils/optimize_result/optimization_results.csv', index=False)
     print("\n优化结果已保存到 utils/optimize_result/optimization_results.csv")
-
-def run_backtest():
-    """运行常规回测"""
-    cerebro = bt.Cerebro()
-    
-    # load data
-    data_feed = load_data(dataFile, start_date, end_date)
-    cerebro.adddata(data_feed)
-
-    # Add strategy
-    # cerebro.addstrategy(SMAStrategy) # baseline: SMAStrategy
-    cerebro.addstrategy(SimpleBreakout)
-
-    # Set broker parameters
-    cerebro.broker.setcash(cash)  # Starting cash
-    
-    # Set commission based on tick type
-    if tick_type == "futures":
-        cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
-        print("=== CommissionInfo 配置 ===")
-        print(f"佣金: ${comm_ibkr_XAUUSD.p.commission}")
-        print(f"合约乘数: {comm_ibkr_XAUUSD.p.mult}")
-        print(f"期货类型: {not comm_ibkr_XAUUSD.p.stocklike}")
-        print(f"资金 ${cash}")
-    else:
-        cerebro.broker.setcommission(commission)  # Default commission for stocks/forex
-    
-    if sizer == "fixed":
-        cerebro.addsizer(bt.sizers.FixedSize, stake=fixed_size_stake)  # Fixed size of shares
-    elif sizer == "percents":
-        cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)  # Default to 10% of cash
-
-    # add analyzers
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio)
-    cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
-    cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
-
-    # Run backtest
-    result = cerebro.run()
-
-    # 显示结果
-    print('----------------------backtesting results----------------------')
-    # print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
-    print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
-    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-    print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
-    
-    end_value = cerebro.broker.getvalue()
-    profit_rate = (end_value - cash) / cash
-    print('Final Profit Rate: {:.2%}'.format(profit_rate))
-    warnings.filterwarnings("ignore", category=UserWarning, module="backtrader.plot.locator")
-    cerebro.plot(
-        style='candlestick',
-        bgcolor='white',
-        tight_layout=True,
-    )
 
 if __name__ == "__main__":
     if OPTIMIZE_MODE:
