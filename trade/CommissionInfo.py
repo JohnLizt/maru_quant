@@ -25,32 +25,24 @@ def create_commission_info():
         params = (
             ('commtype', commtype),
             ('commission', broker_config.get('commission', 0)),
-            ('mult', broker_config.get('multiplier', 100)),  # 黄金期货合约乘数 100盎司
+            ('mult', broker_config.get('multiplier', 1)),  # 黄金期货合约乘数 100盎司，这里没用，先不管
             ('margin', None),  # 使用automargin计算保证金
-            ('stocklike', False),  # 期货合约，非股票
+            ('stocklike', True),  # 现货黄金，逻辑类似股票
             ('automargin', automargin),  # 根据杠杆自动计算
-            ('leverage', leverage),
             ('spread', spread),  # 添加点差参数
+            ('leverage', leverage),  # 添加杠杆参数
         )
         
-        def getoperationcost(self, size, price):
-            """重写操作成本计算 - 期货使用保证金而非全额"""
-            return abs(size) * self.get_margin(price)
-        
-        def getvaluesize(self, size, price):
-            """重写价值计算 - 期货使用保证金"""
-            return abs(size) * self.get_margin(price)
-        
-        def profitandloss(self, size, price, newprice):
-            """重写盈亏计算 - 期货需要乘以合约乘数，并扣除点差成本"""
-            # 基础盈亏计算
-            base_pnl = size * (newprice - price) * self.p.mult
+        # def profitandloss(self, size, price, newprice):
+        #     """重写盈亏计算 - 期货需要乘以合约乘数，并扣除点差成本"""
+        #     # 基础盈亏计算
+        #     base_pnl = size * (newprice - price) * self.p.mult
             
-            # 扣除点差成本（每次开仓都要支付点差）
-            # 点差成本 = 点差 * 合约乘数 * 手数
-            spread_cost = abs(size) * self.p.spread * self.p.mult
+        #     # 扣除点差成本（每次开仓都要支付点差）
+        #     # 点差成本 = 点差 * 合约乘数 * 手数
+        #     spread_cost = abs(size) * self.p.spread * self.p.mult
             
-            return base_pnl - spread_cost
+        #     return base_pnl - spread_cost
     
     return IBKR_XAUUSD_Commission()
 

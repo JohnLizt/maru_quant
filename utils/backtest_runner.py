@@ -29,7 +29,7 @@ def run_backtest_with_params(
         stake: 固定仓位大小
         sizer_type: 仓位管理类型 ("fixed" 或 "percents")
         size_percent: 百分比仓位大小
-        tick_type: 交易品种类型 ("futures" 或其他)
+        tick_type: 交易品种类型 ("stock" 或其他)
         
     Returns:
         包含回测结果的字典，失败时返回None
@@ -47,7 +47,7 @@ def run_backtest_with_params(
         cerebro.broker.setcash(cash)
         
         # 设置佣金
-        if tick_type == "futures":
+        if tick_type == "CFD":
             cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
         else:
             cerebro.broker.setcommission(commission)

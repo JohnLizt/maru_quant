@@ -62,7 +62,7 @@ def run_backtest():
     cerebro.broker.setcash(cash)  # Starting cash
     
     # Set commission based on tick type
-    if tick_type == "futures":
+    if tick_type == "CFD":
         cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
         print("=== CommissionInfo 配置 ===")
         print(f"佣金: ${comm_ibkr_XAUUSD.p.commission}")

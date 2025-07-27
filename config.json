@@ -8,7 +8,7 @@
     "sizer" : {
       "sizer": "fixed",
       "size_percent": 30,
-      "fixed_size_stake": 0.01
+      "fixed_size_stake": 1
     },
     "optimize" : {
       "optimize_mode": false
@@ -20,13 +20,13 @@
     }
   },
   "broker_config": {
-    "tick_type": "futures",
-    "multiplier": 100,
+    "tick_type": "CFD",
     "cash": 100,
     "leverage": 200.0,
+    "spread": 10,
+    "multiplier": 1,
     "fixed_commission": true,
-    "commission": 0,
-    "spread": 0.16
+    "commission": 0
   },
   "download_config": {
     "twelvedata_config" : {

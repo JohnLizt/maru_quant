@@ -25,6 +25,8 @@ class SimpleBreakout(bt.Strategy):
         self.bracket_orders = []  # 存储bracket订单对象
 
     def next(self):
+        # debug log, print order and position
+        self.log(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}')
         # Check if we are in the market
         if not self.position:
             if self.bracket_orders:
@@ -49,22 +51,20 @@ class SimpleBreakout(bt.Strategy):
 
     def notify_order(self, order):
         # debug log
-        self.log('Order {}, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
+        # self.log('Order {}, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
         if order.status in [order.Submitted, order.Accepted]:
             return
 
         if order.status in [order.Completed]:
             # 打印日志
             comminfo = self.broker.getcommissioninfo(self.data)
-            margin_per_lot = comminfo.get_margin(order.executed.price * comminfo.p.mult)
-            total_margin = abs(order.executed.size) * margin_per_lot
-            actual_value = order.executed.size * order.executed.price * comminfo.p.mult
+            margin = comminfo.get_margin(order.executed.price)
             if order.isbuy():
-                self.log('BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
-                    (order.executed.price, order.executed.size, total_margin, margin_per_lot, actual_value, order.executed.comm, self.broker.getcash()))
+                self.log('BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
+                    (order.executed.price, order.executed.size, margin, order.executed.comm, self.broker.getcash()))
             else: 
-                self.log('SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f (%.2f/lot), VALUE %.2f, Comm %.2f, CASH %.2f' %
-                    (order.executed.price, order.executed.size, total_margin, margin_per_lot, actual_value, order.executed.comm, self.broker.getcash()))
+                self.log('SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
+                    (order.executed.price, order.executed.size, margin, order.executed.comm, self.broker.getcash()))
 
         # elif order.status in [order.Canceled, order.Margin, order.Rejected]:
         #     self.log('Order {} CANCELED, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
