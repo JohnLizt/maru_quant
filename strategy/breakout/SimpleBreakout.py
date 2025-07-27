@@ -26,8 +26,7 @@ class SimpleBreakout(bt.Strategy):
 
     def next(self):
         # debug log, print order and position
-        self.log(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}')
-        # Check if we are in the market
+        # self.log(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}')
         if not self.position:
             if self.bracket_orders:
                 self.log(f'ORDER PENDING, skip next') # 下市价单，一般不会走到这

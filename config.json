@@ -23,7 +23,7 @@
     "tick_type": "CFD",
     "cash": 100,
     "leverage": 200.0,
-    "spread": 10,
+    "spread": 0.16,
     "multiplier": 1,
     "fixed_commission": true,
     "commission": 0

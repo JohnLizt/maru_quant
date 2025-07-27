@@ -33,16 +33,16 @@ def create_commission_info():
             ('leverage', leverage),  # 添加杠杆参数
         )
         
-        # def profitandloss(self, size, price, newprice):
-        #     """重写盈亏计算 - 期货需要乘以合约乘数，并扣除点差成本"""
-        #     # 基础盈亏计算
-        #     base_pnl = size * (newprice - price) * self.p.mult
+        def profitandloss(self, size, price, newprice):
+            """重写盈亏计算 - 点差"""
+            # 基础盈亏计算
+            base_pnl = size * (newprice - price)
             
-        #     # 扣除点差成本（每次开仓都要支付点差）
-        #     # 点差成本 = 点差 * 合约乘数 * 手数
-        #     spread_cost = abs(size) * self.p.spread * self.p.mult
-            
-        #     return base_pnl - spread_cost
+            # 扣除点差成本（每次开仓都要支付点差）
+            # 点差成本 = 点差 * size
+            spread_cost = abs(size) * self.p.spread
+
+            return base_pnl - spread_cost
     
     return IBKR_XAUUSD_Commission()
 
