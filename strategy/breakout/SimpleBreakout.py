@@ -96,3 +96,4 @@ class SimpleBreakout(bt.Strategy):
                 self.log(f'[信号]：均线突破阻力位 {resist_value:.2f}, 均线价格 {self.ema[0]:.2f}，执行买入')
                 return True
         return False
+    

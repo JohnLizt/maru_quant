@@ -173,18 +173,26 @@ class WalkForwardAnalyzer:
                     'train_end': train_end,
                     'test_start': test_start,
                     'test_end': test_end,
+                    'efficiency': test_result['sharpe_ratio'] / train_result['train_performance']['sharpe_ratio'] if train_result['train_performance']['sharpe_ratio'] != 0 else 0,
                     'train_sharpe': train_result['train_performance']['sharpe_ratio'],
                     'test_sharpe': test_result['sharpe_ratio'],
                     'train_return': train_result['train_performance']['total_return'],
                     'test_return': test_result['total_return'],
                     'train_max_dd': train_result['train_performance']['max_drawdown'],
                     'test_max_dd': test_result['max_drawdown'],
+                    'train_win_rate': train_result['train_performance']['win_rate'],
+                    'test_win_rate': test_result['win_rate'],
+                    'train_PL_ratio': train_result['train_performance']['P/L_ratio'],
+                    'test_PL_ratio': test_result['P/L_ratio']
                 }
                 self.walk_forward_results.append(summary)
-                
-                print(f"测试期夏普比率: {test_result['sharpe_ratio']:.2f}")
-                print(f"测试期最大回撤: {test_result['max_drawdown']}%")
-                print(f"测试期收益率: {test_result['total_return']:.2%}")
+                print(f"=== 测试期验证结果 === ")
+                print(f"夏普比率: {test_result['sharpe_ratio']:.2f}")
+                print(f"最大回撤: {test_result['max_drawdown']:.2f}%")
+                print(f"收益率: {test_result['total_return']:.2%}")
+                print(f"胜率: {test_result['win_rate']:.2f}%")
+                print(f"盈亏比: {test_result['P/L_ratio']:.2f}")
+                print(f"Walk forward 效率: {summary['efficiency']:.2f}")
             else:
                 print("测试期验证失败")
     
@@ -219,18 +227,38 @@ class WalkForwardAnalyzer:
             return {}
             
         df = pd.DataFrame(self.walk_forward_results)
+
+        # 计算权重：给近期数据更大权重（平方根递增）
+        num_windows = len(df)
+        weights = [(i + 1) ** 0.5 for i in range(num_windows)]
+        total_weight = sum(weights)
+        normalized_weights = [w / total_weight for w in weights]
+        
+        # 使用加权平均计算关键指标
+        avg_test_sharpe = sum(df['test_sharpe'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+        avg_test_max_dd = sum(df['test_max_dd'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+        avg_test_return = sum(df['test_return'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+        avg_test_win_rate = sum(df['test_win_rate'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+        avg_test_PL_ratio = sum(df['test_PL_ratio'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+        avg_train_sharpe = sum(df['train_sharpe'].iloc[i] * normalized_weights[i] for i in range(num_windows))
+
+        # 计算walk forward efficiency指标
+        efficiency = avg_test_sharpe / avg_train_sharpe if avg_train_sharpe != 0 else 0
         
         return {
             'total_windows': len(df),
-            'avg_test_sharpe': df['test_sharpe'].mean(),
-            'avg_test_max_dd': df['test_max_dd'].mean(),
-            'avg_test_return': df['test_return'].mean(),
+            'avg_test_sharpe': avg_test_sharpe,
+            'avg_test_max_dd': avg_test_max_dd,
+            'avg_test_return': avg_test_return,
+            'avg_test_win_rate': avg_test_win_rate,
+            'avg_test_PL_ratio': avg_test_PL_ratio,
             'std_test_return': df['test_return'].std(),
             'positive_periods': (df['test_return'] > 0).sum(),
-            'win_rate': (df['test_return'] > 0).mean(),
+            'period_win_rate': (df['test_return'] > 0).mean(),
             'best_test_return': df['test_return'].max(),
             'worst_test_return': df['test_return'].min(),
-            'consistency_score': df['test_return'].mean() / df['test_return'].std() if df['test_return'].std() > 0 else 0
+            'consistency_score': df['test_return'].mean() / df['test_return'].std() if df['test_return'].std() > 0 else 0,
+            'walk_forward_efficiency': efficiency
         }
     
     def save_results(self, output_dir='utils/walk_forward_results'):

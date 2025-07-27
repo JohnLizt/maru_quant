@@ -3,6 +3,7 @@ import backtrader as bt
 import pandas as pd
 import warnings
 import os
+import re
 
 from analyzer.robustsharpe_30min import RobustSharpe_30min
 from analyzer.sharperatio_30min import SharpeRatio_30min
@@ -12,6 +13,7 @@ from utils.dataloader import load_data
 from utils.config_loader import load_config
 from strategy.SMAStrategy import SMAStrategy
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
+from utils.fileoperator import extract_dates_from_filename
 from utils.optimizer import GridSearchOptimizer
 from trade.CommissionInfo import comm_ibkr_XAUUSD
 from utils.walkforward import WalkForwardAnalyzer
@@ -45,6 +47,8 @@ fixed_commission = broker_config.get("fixed_commission", False)
 commission = broker_config.get("commission", 0.00015)  # Default commission rate
 spread = broker_config.get("spread", 0.16)  # Default spread
 
+fname_start_date, fname_end_date = extract_dates_from_filename(dataFile)
+
 def run_backtest():
     """运行常规回测"""
     cerebro = bt.Cerebro()
@@ -56,7 +60,15 @@ def run_backtest():
     # Add strategy
     # cerebro.addstrategy(ShowData)
     # cerebro.addstrategy(SMAStrategy) # baseline
-    cerebro.addstrategy(SimpleBreakout)
+    cerebro.addstrategy(
+        SimpleBreakout,
+        window=16,
+        threshold=0.001,
+        max_hold_bars=24,
+        take_profit=35,
+        stop_loss=25,
+        sma_period=20
+    )
 
     # Set broker parameters
     cerebro.broker.setcash(cash)  # Starting cash
@@ -64,11 +76,6 @@ def run_backtest():
     # Set commission based on tick type
     if tick_type == "CFD":
         cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
-        print("=== CommissionInfo 配置 ===")
-        print(f"佣金: ${comm_ibkr_XAUUSD.p.commission}")
-        print(f"合约乘数: {comm_ibkr_XAUUSD.p.mult}")
-        print(f"期货类型: {not comm_ibkr_XAUUSD.p.stocklike}")
-        print(f"资金 ${cash}")
     else:
         cerebro.broker.setcommission(commission)  # Default commission for stocks/forex
     
@@ -86,7 +93,8 @@ def run_backtest():
     result = cerebro.run()
 
     # 显示结果
-    print('----------------------backtesting results----------------------')
+    print('================= backtesting results ======================')
+    print(f"from: {fname_start_date} to {fname_end_date}")
     print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
     print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
     print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
@@ -155,7 +163,7 @@ def run_walk_forward():
     
     # 创建分析器
     wf_analyzer = WalkForwardAnalyzer(
-        strategy_class=SimpleBreakout,
+        strategy_class=SMAStrategy,
         data_file=dataFile,
         start_date=start_date,
         end_date=end_date,
@@ -168,12 +176,15 @@ def run_walk_forward():
     )
     
     # 定义参数网格
+    # param_grid = {
+    #     'window': [16],
+    #     'threshold': [0.001],
+    #     'take_profit': [15, 25, 35],
+    #     'stop_loss': [5, 15, 25],
+    #     'sma_period': [20]
+    # }
     param_grid = {
-        'window': [16],
-        'threshold': [0.001],
-        'take_profit': [30],
-        'stop_loss': [15],
-        'sma_period': [20]
+        'maperiod': [20]
     }
     
     # 执行Walk-Forward分析

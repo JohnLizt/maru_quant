@@ -4,7 +4,7 @@
 >
 > beta更类似传统主观交易，只是纪律性好
 
-# 数据源
+# data source
 
 | --            | --        |
 | ------------- | --------- |
@@ -17,7 +17,7 @@
 
 
 
-# CTA strategy
+# strategy
 
 > 1. **趋势跟踪（Trend Following）**
 >    - 代表：SMA/EMA突破、Donchian通道、Turtle策略、ADX趋势跟随等
@@ -63,64 +63,69 @@
 >
 > 思路：信号要卡严一点，过滤掉大量的假突破、弱信号；止盈止损很重要，需要好好设置
 
-- [x] indicator: how to define resist & support?
+- [ ] **indicator: how to define resist & support?**
 
   - [x] extreme value
   - [x] pivot high/low
-  - [ ] bilibili
+  - [ ] AlgoAlpha: resist and breakout
+  - [ ] consider resist turn to support when break
+  - [ ] 布林带, Keltner channel， Donchain channel， 海龟交易法则
 
-- [ ] breakout signal
+- [ ] **breakout signal**
 
-  - [x] candle shape：CSI
+  - [x] candle shape
+
+    - [x] CSI
+
+    - [ ] CISD？ wick流动性 阳包阴
+
+      > https://www.youtube.com/watch?v=EvG8vRTgRbU&t=3s
+      >
+      > https://www.bilibili.com/video/BV1D9GLzyEJF/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=feacdd607007d02479769d9056af2634
 
   - [x] SMA crossover resist
 
     - [x] EMA
 
+  - [ ] multi-top
+
   - [ ] multi-scale
 
-  - [ ] CISD? wick must be filled, 80%
+- [ ] **trend filter**
 
-    > https://www.youtube.com/watch?v=EvG8vRTgRbU&t=3s
-    >
-    > https://www.bilibili.com/video/BV1D9GLzyEJF/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=feacdd607007d02479769d9056af2634
+  - [ ] avoid volatility (time period, news)  https://www.forexfactory.com/
 
-  - [ ] consider resist turn to support when break
-
-  - [ ] resist / support intensity
-
-- [ ] trade management
+- [ ] **trade management**
 
   - [x] take profit / stop loss
     - [ ] ATR dynamic param
-  - [ ] signal intensity based size
+  - [ ] signal intensity based sizer
+    - [ ] resist / support intensity
+    - [ ] breakout intensity
 
-- [ ] live trading
+- [ ] **live trading**
 
-- [ ] trend tracking
+- [ ] **optimization**
 
-  - [ ] recognize left side / right side (via news or sth)
-  - [ ] avoid volatility (via news)  https://www.forexfactory.com/<
-
-- [ ] optimization
-
-  - [ ] higher frequency (10min?)
+  - [x] higher frequency (10min?)
   - [ ] dynamic param (eg. ATR)
   - [x] grid search optimizer
+  - [x] walk forward analysis
+    - [ ] hyper param tuning （with）
   - [ ] ML / DL
 
 
 
-| strategy   | info                                                         | test   |         |            |           | review                                                       |
-| ---------- | ------------------------------------------------------------ | ------ | ------- | ---------- | --------- | ------------------------------------------------------------ |
-| **resist** |                                                              | **WR** | **P/L** | **sharpe** | **drawd** | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t |        |         |            |           | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss |        |         |            |           | 1.resist definition not good                                 |
-| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy |        |         |            |           | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management |        |         |            |           | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders |        |         |            |           | 1.fake breakout<br />2.avoid fierce volatility<br />3.take profit/ stop loss too fierce, not smooth |
-| v1.0.5     | 1. build test framework & baseline <br />                    |        |         |            |           |                                                              |
-| v1.0.6     | 1. impl short order- trend tracking<br />2. take profit / stop los |        |         |            |           |                                                              |
+| strategy   | info                                                         | test       |         |        |         | review                                                       |
+| ---------- | ------------------------------------------------------------ | ---------- | ------- | ------ | ------- | ------------------------------------------------------------ |
+| **resist** |                                                              | **sharpe** | **Mdd** | **WR** | **P/L** | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t |            |         |        |         | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss |            |         |        |         | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy |            |         |        |         | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management |            |         |        |         | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders |            |         |        |         | 1.fake breakout<br />2.avoid fierce volatility<br />3.take profit/ stop loss too fierce, not smooth<br />4.trend filter |
+| v1.0.5     | 1. implement walk-forward analysis <br />2. add logger for optimization | 1.18       | 51%     | 41%    | 1.2     |                                                              |
+| v1.0.6     | 1. dynamic take profit / stop loss<br />2. impl short orderg<br /> |            |         |        |         |                                                              |
 
 
 
@@ -139,6 +144,33 @@
 
 
 
+# back testing
+
+## walk forward analysis
+
+> 滑动窗口多周期优化 + 验证，优点：
+>
+> 1. 综合检验策略性能（跨周期平均、未来表现）
+> 2. WFE：检验策略是否过拟合（不同周期表现是否一致）
+> 3. 获取参数建议和不同周期内策略表现，方便进一步调整
+>
+> 关于**WFE**：反映策略**是否过拟合**，即训练期表现能否在测试期复现，但是这个指标受到市场本身波动的影响较大
+>
+> - 窗口长度：以夏普率优化目标，测试集最好半年以上，训练集一年以上
+>
+> - 参数不续训：倾向验证策略本身而不是参数
+
+* **strategy performance** (multi windows avg_test result)
+
+| strategy | sharpe | max_dd  | return | win_rate | PL_ratio | WFE  | comment |
+| -------- | ------ | ------- | ------ | -------- | -------- | ---- | ------- |
+| SMA      | 0.4928 | 77.0512 | 0.6321 | 24%      | 2.9169   | 2.8  |         |
+|          |        |         |        |          |          |      |         |
+
+
+
+
+
 # live trading
 
 
@@ -152,6 +184,7 @@
 | 李不白 | [bilibili](https://space.bilibili.com/3546791769279104?spm_id_from=333.1387.follow.user_card.click) |
 |        | [red](https://www.xiaohongshu.com/user/profile/5f5eeab900000000010047bc?xsec_token=ABuufNWq0rQRznfAUzNjZ6-5ZJYu-DC1GR3Dyn8F34naM%3D&xsec_source=pc_search) |
 | 知乎   |                                                              |
+| MQL5   |                                                              |
 
 ## candles theory
 
@@ -160,7 +193,11 @@
 | candle wick  | means strong? |
 | fill the gap |               |
 
+## commodity 基础知识
 
+> 看成加杠杆的股票就行，不过加个杠杆
+>
+> 关于杠杆：简单来说，同样仓位下，杠杆越大越好
 
 
 

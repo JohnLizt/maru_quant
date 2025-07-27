@@ -60,7 +60,7 @@ class GridSearchOptimizer:
         # 转换为DataFrame并排序
         df_results = pd.DataFrame(self.results)
         if not df_results.empty:
-            # 按利润降序排列
+            # 按夏普率降序排列
             if 'sharpe_ratio' in df_results.columns:
                 df_results = df_results.sort_values('sharpe_ratio', ascending=False)
 

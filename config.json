@@ -1,7 +1,7 @@
 {
   "backtest_config": {
     "basic" : {
-      "file": "data/OANDA_XAUUSD, 30_a6bf1.csv",
+      "file": "data/longtime/XAUUSD_30_2020-01-01-2025-07-27.csv",
       "start_date": "",
       "end_date": ""
     },
@@ -10,13 +10,13 @@
       "size_percent": 30,
       "fixed_size_stake": 1
     },
+    "validation" : {
+      "walk_forward_mode": true,
+      "train_quarters" : 4,
+      "test_quarters" : 2
+    },
     "optimize" : {
       "optimize_mode": false
-    },
-    "validation" : {
-      "walk_forward_mode": false,
-      "train_quarters" : 3,
-      "test_quarters" : 1
     }
   },
   "broker_config": {
