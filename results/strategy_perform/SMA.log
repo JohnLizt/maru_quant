@@ -1,0 +1,245 @@
+2025-07-30 09:39:53 - main - INFO - 运行Walk-Forward Analysis...
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 当前使用的策略: SMA
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 检测到空的日期参数，正在加载数据获取日期范围...
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 使用数据集开始日期: 2020-01-24
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 使用数据集结束日期: 2025-07-26
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 开始Walk-Forward Analysis...
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 训练期: 4个季度, 测试期: 2个季度
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 总共生成 17 个窗口
+2025-07-30 09:39:53 - walk forward analyzer - INFO - === 窗口 1/17 ===
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 训练期: 2020-01-24 至 2021-01-24
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 测试期: 2021-01-24 至 2021-07-24
+2025-07-30 09:39:53 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:39:56 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:39:56 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:39:57 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 夏普比率: -2.24
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 最大回撤: 39.81%
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 收益率: -39.18%
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 胜率: 24.38%
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 盈亏比: 2.39
+2025-07-30 09:39:57 - walk forward analyzer - INFO - Walk forward 效率: 2.26
+2025-07-30 09:39:57 - walk forward analyzer - INFO - === 窗口 2/17 ===
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 训练期: 2020-04-24 至 2021-04-24
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 测试期: 2021-04-24 至 2021-10-24
+2025-07-30 09:39:57 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:39:59 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:39:59 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:00 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 夏普比率: -1.91
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 最大回撤: 50.60%
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 收益率: -39.75%
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 胜率: 25.19%
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 盈亏比: 2.20
+2025-07-30 09:40:00 - walk forward analyzer - INFO - Walk forward 效率: 2.10
+2025-07-30 09:40:00 - walk forward analyzer - INFO - === 窗口 3/17 ===
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 训练期: 2020-07-24 至 2021-07-24
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 测试期: 2021-07-24 至 2022-01-24
+2025-07-30 09:40:00 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:02 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:02 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:03 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 夏普比率: -0.61
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 最大回撤: 20.98%
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 收益率: -13.16%
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 胜率: 25.87%
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 盈亏比: 2.58
+2025-07-30 09:40:03 - walk forward analyzer - INFO - Walk forward 效率: 0.32
+2025-07-30 09:40:03 - walk forward analyzer - INFO - === 窗口 4/17 ===
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 训练期: 2020-10-24 至 2021-10-24
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 测试期: 2021-10-24 至 2022-04-24
+2025-07-30 09:40:03 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:06 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:06 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:07 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 夏普比率: 0.32
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 最大回撤: 25.79%
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 收益率: 2.59%
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 胜率: 26.15%
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 盈亏比: 2.87
+2025-07-30 09:40:07 - walk forward analyzer - INFO - Walk forward 效率: -0.24
+2025-07-30 09:40:07 - walk forward analyzer - INFO - === 窗口 5/17 ===
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 训练期: 2021-01-24 至 2022-01-24
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 测试期: 2022-01-24 至 2022-07-24
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:07 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:09 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 夏普比率: -0.10
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 最大回撤: 39.15%
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 收益率: -5.11%
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 胜率: 24.44%
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 盈亏比: 3.00
+2025-07-30 09:40:09 - walk forward analyzer - INFO - Walk forward 效率: 0.09
+2025-07-30 09:40:09 - walk forward analyzer - INFO - === 窗口 6/17 ===
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 训练期: 2021-04-24 至 2022-04-24
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 测试期: 2022-04-24 至 2022-10-24
+2025-07-30 09:40:09 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:11 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:11 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:12 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 夏普比率: -1.28
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 最大回撤: 40.01%
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 收益率: -27.10%
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 胜率: 22.47%
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 盈亏比: 2.74
+2025-07-30 09:40:12 - walk forward analyzer - INFO - Walk forward 效率: 2.29
+2025-07-30 09:40:12 - walk forward analyzer - INFO - === 窗口 7/17 ===
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 训练期: 2021-07-24 至 2022-07-24
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 测试期: 2022-07-24 至 2023-01-24
+2025-07-30 09:40:12 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:14 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:14 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:15 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 夏普比率: 0.79
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 最大回撤: 29.84%
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 收益率: 12.49%
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 胜率: 26.18%
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 盈亏比: 3.02
+2025-07-30 09:40:15 - walk forward analyzer - INFO - Walk forward 效率: -2.35
+2025-07-30 09:40:15 - walk forward analyzer - INFO - === 窗口 8/17 ===
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 训练期: 2021-10-24 至 2022-10-24
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 测试期: 2022-10-24 至 2023-04-24
+2025-07-30 09:40:15 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:18 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:18 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:19 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 夏普比率: 2.97
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 最大回撤: 14.23%
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 收益率: 56.01%
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 胜率: 28.10%
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 盈亏比: 3.59
+2025-07-30 09:40:19 - walk forward analyzer - INFO - Walk forward 效率: -5.46
+2025-07-30 09:40:19 - walk forward analyzer - INFO - === 窗口 9/17 ===
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 训练期: 2022-01-24 至 2023-01-24
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 测试期: 2023-01-24 至 2023-07-24
+2025-07-30 09:40:19 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:21 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:21 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:22 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 夏普比率: 0.55
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 最大回撤: 22.72%
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 收益率: 6.64%
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 胜率: 23.74%
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 盈亏比: 3.35
+2025-07-30 09:40:22 - walk forward analyzer - INFO - Walk forward 效率: 1.45
+2025-07-30 09:40:22 - walk forward analyzer - INFO - === 窗口 10/17 ===
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 训练期: 2022-04-24 至 2023-04-24
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 测试期: 2023-04-24 至 2023-10-24
+2025-07-30 09:40:22 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:25 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:25 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:26 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 夏普比率: -0.97
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 最大回撤: 49.21%
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 收益率: -20.41%
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 胜率: 23.01%
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 盈亏比: 2.87
+2025-07-30 09:40:26 - walk forward analyzer - INFO - Walk forward 效率: -1.26
+2025-07-30 09:40:26 - walk forward analyzer - INFO - === 窗口 11/17 ===
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 训练期: 2022-07-24 至 2023-07-24
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 测试期: 2023-07-24 至 2024-01-24
+2025-07-30 09:40:26 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:28 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:28 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:30 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 夏普比率: 0.76
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 最大回撤: 27.06%
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 收益率: 11.19%
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 胜率: 27.09%
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 盈亏比: 2.93
+2025-07-30 09:40:30 - walk forward analyzer - INFO - Walk forward 效率: 1.16
+2025-07-30 09:40:30 - walk forward analyzer - INFO - === 窗口 12/17 ===
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 训练期: 2022-10-24 至 2023-10-24
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 测试期: 2023-10-24 至 2024-04-24
+2025-07-30 09:40:30 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:32 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:32 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:33 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 夏普比率: 2.25
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 最大回撤: 23.92%
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 收益率: 49.67%
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 胜率: 27.69%
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 盈亏比: 3.61
+2025-07-30 09:40:33 - walk forward analyzer - INFO - Walk forward 效率: 1.86
+2025-07-30 09:40:33 - walk forward analyzer - INFO - === 窗口 13/17 ===
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 训练期: 2023-01-24 至 2024-01-24
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 测试期: 2024-01-24 至 2024-07-24
+2025-07-30 09:40:33 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:35 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:35 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:36 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 夏普比率: 3.07
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 最大回撤: 16.63%
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 收益率: 71.03%
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 胜率: 27.78%
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 盈亏比: 3.82
+2025-07-30 09:40:36 - walk forward analyzer - INFO - Walk forward 效率: 4.89
+2025-07-30 09:40:36 - walk forward analyzer - INFO - === 窗口 14/17 ===
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 训练期: 2023-04-24 至 2024-04-24
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 测试期: 2024-04-24 至 2024-10-24
+2025-07-30 09:40:36 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:37 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:37 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:38 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 夏普比率: 1.80
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 最大回撤: 15.43%
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 收益率: 37.79%
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 胜率: 28.96%
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 盈亏比: 2.93
+2025-07-30 09:40:38 - walk forward analyzer - INFO - Walk forward 效率: 2.24
+2025-07-30 09:40:38 - walk forward analyzer - INFO - === 窗口 15/17 ===
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 训练期: 2023-07-24 至 2024-07-24
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 测试期: 2024-07-24 至 2025-01-24
+2025-07-30 09:40:38 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:40 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:40 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:41 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 夏普比率: 0.59
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 最大回撤: 19.80%
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 收益率: 8.98%
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 胜率: 28.78%
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 盈亏比: 2.57
+2025-07-30 09:40:41 - walk forward analyzer - INFO - Walk forward 效率: 0.32
+2025-07-30 09:40:41 - walk forward analyzer - INFO - === 窗口 16/17 ===
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 训练期: 2023-10-24 至 2024-10-24
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 测试期: 2024-10-24 至 2025-04-24
+2025-07-30 09:40:41 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:43 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:43 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:44 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 夏普比率: 1.26
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 最大回撤: 27.20%
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 收益率: 31.02%
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 胜率: 28.07%
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 盈亏比: 2.85
+2025-07-30 09:40:44 - walk forward analyzer - INFO - Walk forward 效率: 0.63
+2025-07-30 09:40:44 - walk forward analyzer - INFO - === 窗口 17/17 ===
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 训练期: 2024-01-24 至 2025-01-24
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 测试期: 2025-01-24 至 2025-07-24
+2025-07-30 09:40:44 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 09:40:47 - walk forward analyzer - INFO - 最佳参数: {'maperiod': 15}
+2025-07-30 09:40:47 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 09:40:48 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 夏普比率: 1.86
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 最大回撤: 28.05%
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 收益率: 67.86%
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 胜率: 29.93%
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 盈亏比: 2.84
+2025-07-30 09:40:48 - walk forward analyzer - INFO - Walk forward 效率: 0.96
+2025-07-30 09:40:48 - main - INFO - === Walk-Forward Analysis 汇总统计 ===
+2025-07-30 09:40:48 - main - INFO - Strategy: SMA
+2025-07-30 09:40:48 - main - INFO - Total Windows: 17
+2025-07-30 09:40:48 - main - INFO - Avg Test Sharpe: 0.8954
+2025-07-30 09:40:48 - main - INFO - Avg Test MaxDd: 27.1486
+2025-07-30 09:40:48 - main - INFO - WFE: 0.6959
+2025-07-30 09:40:48 - main - INFO - Std WFE: 2.2593
+2025-07-30 09:40:48 - main - INFO - Avg Test WinRate: 26.7742
+2025-07-30 09:40:48 - main - INFO - Avg Test PL Ratio: 3.0138
+2025-07-30 09:40:48 - main - INFO - Avg Test Return: 0.2061
+2025-07-30 09:40:48 - main - INFO - Std Test Return: 0.3528
+2025-07-30 09:40:48 - main - INFO - Best Test Return: 0.7103
+2025-07-30 09:40:48 - main - INFO - Worst Test Return: -0.3975
+2025-07-30 09:40:48 - main - INFO - Period Win Rate: 0.6471
+2025-07-30 09:40:48 - main - INFO - Consistency Score: 0.3511
+2025-07-30 09:40:48 - walk forward analyzer - INFO - 结果已保存到 utils/walk_forward_results

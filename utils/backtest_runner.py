@@ -1,11 +1,12 @@
 import logging
 import backtrader as bt
 import warnings
+import traceback  # 添加这个导入
 from typing import Dict, Any, Optional
 
 from analyzer.sharperatio_30min import SharpeRatio_30min
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
-from trade.CommissionInfo import comm_ibkr_XAUUSD
+from trade.commission_info.CommissionInfo import comm_ibkr_XAUUSD
 from utils.config_manager import config_manager
 
 
@@ -120,5 +121,16 @@ class BacktestRunner:
             return backtest_result
             
         except Exception as e:
-            print(f"回测失败，参数: {params}, 错误: {str(e)}")
+            print(f"回测失败，参数: {params}")
+            print(f"错误类型: {type(e).__name__}")
+            print(f"错误信息: {str(e)}")
+            print("完整调用栈:")
+            print(traceback.format_exc())
+            
+            # 如果有logger，也记录到日志中
+            if hasattr(self, 'logger') and self.logger:
+                self.logger.error(f"回测失败，参数: {params}")
+                self.logger.error(f"错误: {str(e)}")
+                self.logger.error(f"调用栈: {traceback.format_exc()}")
+            
             return None

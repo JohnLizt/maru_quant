@@ -163,7 +163,7 @@ class WalkForwardAnalyzer:
             
             # 记录训练结果
             train_result = {
-                'window': i+1,
+                'window_idx': i+1,
                 'train_start': train_start,
                 'train_end': train_end,
                 'best_params': best_params,
@@ -177,7 +177,7 @@ class WalkForwardAnalyzer:
             
             if test_result:
                 test_result.update({
-                    'window': i+1,
+                    'window_idx': i+1,
                     'test_start': test_start,
                     'test_end': test_end,
                     'best_params': best_params
@@ -187,7 +187,7 @@ class WalkForwardAnalyzer:
                 # 汇总结果
                 train_sharpe = train_result['train_performance']['sharpe_ratio']
                 summary = {
-                    'window': i+1,
+                    'window_idx': i+1,
                     'train_start': train_start,
                     'train_end': train_end,
                     'test_start': test_start,
@@ -284,17 +284,19 @@ class WalkForwardAnalyzer:
             
         if self.train_results:
             # 保存训练结果（需要特殊处理嵌套字典）
+            self.logger.info("正在保存训练期优化结果...")
             train_flat = []
             for result in self.train_results:
                 flat_result = {
-                    'window': result['window'],
+                    'window_idx': result['window_idx'],
                     'train_start': result['train_start'],
                     'train_end': result['train_end']
                 }
                 flat_result.update(result['best_params'])
                 flat_result.update(result['train_performance'])
+                self.logger.info(f"{flat_result}")
                 train_flat.append(flat_result)
-            
+
             df_train = pd.DataFrame(train_flat)
             df_train.to_csv(f'{output_dir}/train_results.csv', index=False)
             

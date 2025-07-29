@@ -1,16 +1,17 @@
-# data source
+# Data Source
 
-| source        | cost (month) | XAUUSD              |
-| ------------- | ------------ | ------------------- |
-| yfinance      | free         | no data             |
-| alpha vantage | free         | till 2020           |
-| tradingview   | 14$          | till 2023 (precise) |
-| tickstory     |              |                     |
-| MT5           |              |                     |
+| source             | cost (month) | earliest  | comment                               |
+| ------------------ | ------------ | --------- | ------------------------------------- |
+| yfinance           | free         | no data   |                                       |
+| alpha vantage      | free         | 2020-     | has 9pm data, maybe calculated result |
+| tradingview        | 14$          | 2023-     | **realtime**<br />download fast       |
+| **tickstory_lite** | **free**     | **2003-** | **unbelievable slow**                 |
+| tick data manager  |              |           |                                       |
+| MT4                |              |           |                                       |
 
 
 
-# strategy
+# CTA
 
 > 量化大方向上可以分为alpha、beta两大流派
 >
@@ -42,9 +43,17 @@
 > 8. **资金管理与组合优化**
 >    - 代表：多品种马丁格尔、凯利公式、动态止损止盈等
 
+- [ ] 黄金品类研究
+  - [ ] 金价影响因素
+  - [ ] 美元影响因素
+- [ ] CTA策略研究
+  - [ ] 突破策略
+  - [ ] 多因子策略框架
+  - [ ] 事件驱动策略框架
 
 
-## **trend tracking**
+
+## **Trend Tracking**
 
 > 适用于上涨/下跌行情，震荡市容易出事
 
@@ -52,87 +61,68 @@
 
 > 本质上是趋势追踪（追涨杀跌），适用于上涨/下跌行情
 
-### breakout （施工中）
+### Breakout （施工中）
 
-> 压力位/支撑位的本质：**集体意识**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。
+> 压力位/支撑位的本质：**集体意识**;  人们对于区域顶部和底部的记忆是最深刻的，形成了集体的自证预言。参考我自己买日元的经历，第一次碰到4.8没有买，看到涨价到5以上，内心非常后悔，下次价格一触及4.8就会立刻买入。因此，假设在无干扰环境下价格会在一个区间内波动，类似三角函数；既然能突破区间，说明有外部力量影响，这种大的力量可能会形成趋势，从而有跟随获利的可能性。
 >
-> 因此，如果在隔离环境下，我假设价格会一直在一个区间波动，类似三角函数；既然能突破区间，说明有外部力量影响，这种大的力量可能会形成趋势，从而有跟随的可能性。
+> breakout策略核心思路是抓住成功突破后的一波行情，属于偏主观的趋势策略，**震荡市会非常难受**，上涨/下跌行情表现较好。操作思路上：信号要卡严一点，过滤掉大量的假突破、弱信号；止盈止损很重要，需要好好设置
 >
-> breakout策略核心思路是抓住成功突破后的一波行情，属于偏主观的趋势策略，**震荡市会非常难受**，上涨/下跌行情表现较好。
->
-> 思路：信号要卡严一点，过滤掉大量的假突破、弱信号；止盈止损很重要，需要好好设置
+> 集体意识的概念，主要用于收割人工玩家，但是黄金市场的**量化玩家似乎占比60%以上**，可能需要重新考虑更优的策略
 
-- [ ] **indicator: how to define resist & support?**
-
-  - [x] extreme value
+- [ ] **indicator**
+  - [x] ~~extreme~~
   - [x] pivot high/low
+    - [x] ~~smoothed：resistance zone~~
+    - [x] support represent (broken resist automatically become support)
+    - [x] ~~expand resist queue~~
   - [ ] AlgoAlpha: resist and breakout
-  - [ ] consider resist turn to support when break
-  - [ ] 布林带, Keltner channel， Donchain channel， 海龟交易法则
-
+  - [ ] 布林带,  Keltner channel， Donchain channel， 海龟交易法则
 - [ ] **breakout signal**
-
-  - [x] candle shape
-
-    - [x] CSI
-
-    - [ ] CISD？ wick流动性 阳包阴
-
-      > https://www.youtube.com/watch?v=EvG8vRTgRbU&t=3s
-      >
-      > https://www.bilibili.com/video/BV1D9GLzyEJF/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=feacdd607007d02479769d9056af2634
-
+  - [x] ~~candle shape~~
+    - [x] ~~CSI~~
   - [x] SMA crossover resist
-
     - [x] EMA
-
-  - [ ] multi-top
-
-  - [ ] multi-scale
-
+  - [x] ~~multi-break~~
 - [ ] **trend filter**
-
-  - [ ] avoid volatility (time period, news)  https://www.forexfactory.com/
-
+  - [ ] ATR filter
+  - [ ] avoid big volatility (time period, news)  https://www.forexfactory.com/
+  - [ ] timezone filter
 - [ ] **trade management**
-
   - [x] take profit / stop loss
-    - [ ] ATR dynamic param
-  - [ ] signal intensity based sizer
+    - [x] ATR
+  - [ ] <u>parallel position</u>
+  - [ ] adaptive sizer
     - [ ] resist / support intensity
     - [ ] breakout intensity
-
+  - [ ] ~~dynamic spread~~
+    - [ ] ~~Tick Data Suite~~
 - [ ] **live trading**
-
 - [ ] **optimization**
-
-  - [x] higher frequency (10min?)
-  - [ ] dynamic param (eg. ATR)
+  - [x] ~~higher frequency (10min?)~~
   - [x] grid search optimizer
   - [x] walk forward analysis
-    - [ ] hyper param tuning （with）
+    - [ ] refine WFE
   - [ ] ML / DL
 
 
 
-| strategy   | info                                                         | review                                                       |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **resist** |                                                              | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 1.resist definition not good                                 |
-| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders | 1.fake breakout<br />2.avoid fierce volatility<br />3.take profit/ stop loss too fierce, not smooth<br />4.trend filter |
-| v1.0.5     | 1. implement walk-forward analysis <br />2. add logger for optimization | 1.WFE not very stable                                        |
-| v1.0.6     | 1. dynamic take profit / stop loss<br />2. impl short orderg<br /> |                                                              |
+#### ATR stop loss
+
+> * ATR
+>
+> ATR (usually around 5) * k (2 by default) ≈ 10
+>
+> for XAUUSD 30min, k usually around 6 ~ 10
+>
+> * ATR period (default 14)
 
 
 
-## multi factor
+## Multi Factor
 
 
 
-## event-driven
+## Event-Driven
 
 ### LLM-news
 
@@ -141,25 +131,53 @@
 
 
 
+# **Strategy Performance** 
 
-
-# back testing
-
-## walk forward analysis
-
-> 滑动窗口多周期优化 + 验证，优点：
+> **data**: past 5 years
 >
-> 1. 综合检验策略性能（跨周期平均、未来表现）
-> 2. WFE：检验策略是否过拟合（不同周期表现是否一致）
-> 3. 获取参数建议和不同周期内策略表现，方便进一步调整
+> **window**: 1 year train, half year test
+>
+> **account**: 500 cash, 0.01 lot (**return** is related to initial cash, here we use very conservative value)
+>
+> final summarize: use **<u>Exponent Moving Avg</u>** for better reflect recent performance
+>
+> WFE这个指标目前不是很好用，看起来优化参数组合给的越多，这个值越大代表过拟合，或许需要固定参数跑WFA
+
+| strategy       | sharpe | max_dd  | return | win_rate | PL_ratio | WFE           | comment  |
+| -------------- | ------ | ------- | ------ | -------- | -------- | ------------- | -------- |
+| **SMA**        | 0.8954 | 27.1486 | 0.2061 | 26.7742  | 3.0138   | 0.6959∓2.2593 | baseline |
+| PivotBreakout | 1.7367 | 14.9393 | 0.2874 | 56.1124  | 1.2534   | 1.4636∓1.4898 | nice     |
+|                |        |         |        |          |          |               |          |
+
+
+
+
+
+# BackTesting
+
+* **策略检验流程**
+
+> 1. 人工分析：短周期，验证基本逻辑，初步估计参数范围（可以用optimizer调参）
+>    - 长周期回测：筛选掉明显弱的策略，短周期表现好可以跳过
+> 2. WFA优化：多周期调参，投票法选择参数组合
+>    * 配合不强的参数分开调，最好一次精调一个参数，距离 like [0.01, 0.1, 0.3, 0.5, 1]  
+> 3. WFA横评：固定参数，检验策略效果
+
+
+
+## WFA
+
+> Walk Forward Analysis 滑动窗口多周期优化 + 验证，优点：
+>
+> 1. 综合检验策略性能（未来预测能力、跨市场周期鲁棒性）
+> 2. WFE：检验策略是否过拟合
+> 3. 有一定的参数优化能力，实盘可直接采用步进优化
 >
 > - 窗口长度如何设置
 >
 > 窗口过短，夏普率计算不可信，因此测试集至少要半年以上（6000条）
 >
-> 窗口过长，会出现测试集集中在后面的年份，市场差距太大
->
-> ![image-20250729094448028](assets\image-20250729094448028.png)
+> 窗口过长，会出现测试集集中在后面年份，市场差距太大
 >
 > - 参数不续训：倾向验证策略本身而不是参数
 >
@@ -185,27 +203,7 @@
 
 
 
-## **strategy performance** 
-
-> **data**: past 5 years
->
-> **window**: 1 year train, half year test
->
-> **account**: 500 cash, 0.01 lot (**return** is related to initial cash, here we use very conservative value)
->
-> final summarize: use **<u>time-weighted avg</u>** for better reflect recent performance
-
-| strategy       | sharpe | max_dd  | return | win_rate | PL_ratio | WFE           | comment                     |
-| -------------- | ------ | ------- | ------ | -------- | -------- | ------------- | --------------------------- |
-| SMA            | 0.8028 | 14.7693 | 0.1030 | 26.7742  | 3.0138   | 0.7737∓2.1814 | is it even OK for baseline? |
-| SimpleBreakout | 1.3866 | 12.8653 | 0.1918 | 51.5979  | 1.3915   | 2.1524∓5.6502 | why WFE so big??            |
-|                |        |         |        |          |          |               |                             |
-
-
-
-
-
-# live trading
+# Live Trading
 
 
 
@@ -213,12 +211,14 @@
 
 # 学习资源
 
-| --     | --                                                           |
-| ------ | ------------------------------------------------------------ |
-| 李不白 | [bilibili](https://space.bilibili.com/3546791769279104?spm_id_from=333.1387.follow.user_card.click) |
-|        | [red](https://www.xiaohongshu.com/user/profile/5f5eeab900000000010047bc?xsec_token=ABuufNWq0rQRznfAUzNjZ6-5ZJYu-DC1GR3Dyn8F34naM%3D&xsec_source=pc_search) |
-| 知乎   |                                                              |
-| MQL5   |                                                              |
+| --           | --                                                           |
+| ------------ | ------------------------------------------------------------ |
+| 李不白       | [bilibili](https://space.bilibili.com/3546791769279104?spm_id_from=333.1387.follow.user_card.click) |
+|              | [red](https://www.xiaohongshu.com/user/profile/5f5eeab900000000010047bc?xsec_token=ABuufNWq0rQRznfAUzNjZ6-5ZJYu-DC1GR3Dyn8F34naM%3D&xsec_source=pc_search) |
+| 黄金外汇MT4  | https://space.bilibili.com/1324136602?spm_id_from=333.788.upinfo.head.click |
+| 基本指标知识 | https://www.bilibili.com/video/BV12L4y1L7TA?spm_id_from=333.788.videopod.sections&vd_source=feacdd607007d02479769d9056af2634 |
+| 知乎         |                                                              |
+| MQL5         |                                                              |
 
 ## candles theory
 
@@ -235,7 +235,7 @@
 
 
 
-# 小本本
+# Dev
 
 ```python
 # debug
@@ -243,4 +243,16 @@ bt.num2date(self.datas[0].datetime[0]).strftime('%Y-%m-%d %H:%M:%S') == '2020-06
 ```
 
 
+
+| strategy   | info                                                         | review                                                       |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **resist** |                                                              | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support 2. breakout -> buy / breakdown -> sell  3. close after 3 t | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell 2. CSI: candle strength index 3. add take profit / stop loss | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack 2. simple breakout strategy | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy 2. grid search optimizer 3. train-test split 4. size management | 1. latency;  2. not good at big volatility 3. too many fake breakout |
+| v1.0.4     | 1. compare sma, ema, wma 2. commission info (margin, leverage...) 3. bracket orders | 1.fake breakout 2.avoid fierce volatility 3.take profit/ stop loss too fierce, not smooth 4.trend filter |
+| v1.0.5     | 1. WFA framework  2. logger 3. baselines                     | 1.WFE not very stable                                        |
+| v1.0.6     | 1. living trading via MT5                                    |                                                              |
+| v1.0.7     | 1. dynamic take profit / stop loss                           |                                                              |
 

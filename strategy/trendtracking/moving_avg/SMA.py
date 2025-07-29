@@ -3,7 +3,7 @@ import pandas as pd
 from utils.logger import setup_strategy_logger
 
 # Create a Stratey
-class SMAStrategy(bt.Strategy):
+class SMA(bt.Strategy):
     params = (
         ('maperiod', 15),
     )

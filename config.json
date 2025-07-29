@@ -1,7 +1,7 @@
 {
   "backtest_config": {
     "basic" : {
-      "file": "data/longtime/XAUUSD_30_2020-01-01-2025-07-27.csv",
+      "file": "data/longtime/XAUUSD, 30_2023-01-02-2025-07-25.csv",
       "start_date": "",
       "end_date": ""
     },
@@ -11,7 +11,7 @@
       "fixed_size_stake": 1
     },
     "validation" : {
-      "walk_forward_mode": true,
+      "walk_forward_mode": false,
       "train_quarters" : 4,
       "test_quarters" : 2
     },

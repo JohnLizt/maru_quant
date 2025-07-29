@@ -1,6 +1,7 @@
-from strategy.breakout.SimpleBreakout import SimpleBreakout
+from strategy.mean_reversion.bollinger_reversion import BollingerBandsMeanReversionStrategy
+from strategy.trendtracking.breakout import PivotBreakout, MultiPivotBreakout, SmoothedPivotBreakout
 from utils.dataloader import load_data
-from strategy.SMAStrategy import SMAStrategy
+from strategy.trendtracking.moving_avg import SMA, SMA_V2
 from utils.fileoperator import extract_dates_from_filename
 from utils.optimizer import GridSearchOptimizer
 from utils.walkforward import WalkForwardAnalyzer
@@ -26,28 +27,18 @@ else:
 def run_backtest():
     """运行常规回测"""
     logger.info("========== start backtesting... ==========")
-    
-    # 直接从配置创建回测运行器
     runner = BacktestRunner.from_config()
-    
-    # load data
     data_feed = load_data(dataFile, start_date, end_date)
     
     # 策略参数
-    strategy_params = {
-        'window': 16,
-        'threshold': 0.001,
-        'max_hold_bars': 24,
-        'take_profit': 35,
-        'stop_loss': 25,
-        'sma_period': 20
+    param_grid = {
+    
     }
-    
+
     # 运行回测
-    result = runner.run(SimpleBreakout, data_feed, strategy_params)
-    
+    result = runner.run(BollingerBandsMeanReversionStrategy, data_feed, param_grid, plot=True)
+
     if result:
-        # 显示结果
         logger.info('================= backtesting results ======================')
         logger.info(f"From: {fname_start_date} To {fname_end_date}")
         logger.info('Sharpe Ratio: %.4f', result['sharpe_ratio'])
@@ -65,25 +56,24 @@ def run_backtest():
 def run_optimization():
     """运行参数优化"""
     logger.info("开始参数优化...")
-    
-    # 加载数据
     data_feed = load_data(dataFile, start_date, end_date)
     
     # 创建优化器 - 直接使用配置管理器的参数
     optimizer = GridSearchOptimizer(
-        strategy_class=SimpleBreakout,
+        strategy_class=PivotBreakout,
         data_feed=data_feed,
         **config_manager.get_backtest_params()
     )
     
     # 定义参数网格
     param_grid = {
-        'window': [6, 12, 16, 20],
-        'threshold': [0.001],
-        'max_hold_bars': [24],
-        'take_profit': [20, 25, 30, 35, 40, 45],
-        'stop_loss': [10, 15, 20, 25, 30],
-        'sma_period': [20]
+        'window': [16],  # 滑动窗口大小
+        'threshold': [0],  # 区间阈值
+        'max_hold_bars': [24],  # 最大持仓时间
+        'take_profit_atr': [2.0, 4.0, 6.0, 8.0, 10.0],  # 止盈ATR倍数
+        'stop_loss_atr': [1.5, 3.0, 5, 7, 10],  # 止损ATR倍数
+        'atr_period': [10, 14, 20],  # ATR周期
+        'sma_period': [10, 20, 30],  # 均线周期
     }
     
     # 执行优化
@@ -110,7 +100,7 @@ def run_walk_forward():
     
     # 创建分析器 - 直接使用配置管理器的参数
     wf_analyzer = WalkForwardAnalyzer(
-        strategy_class=SMAStrategy,
+        strategy_class=MultiPivotBreakout,
         data_file=dataFile,
         start_date=start_date,
         end_date=end_date,
@@ -119,13 +109,18 @@ def run_walk_forward():
     
     # 定义参数网格
     param_grid = {
-        # 'window': [16],
-        # 'threshold': [0.001],
-        # 'take_profit': [35],
-        # 'stop_loss': [25],
-        # 'sma_period': [15],
-        # 'max_hold_bars': [24]
+        'window': [16],  # 滑动窗口大小
+        'max_resists': [5],  # 最多同时保存的阻力位数量
+        'breakout_window': [2],  # 突破时间窗口
+        'max_hold_bars': [36],  # 最大持仓时间
+        'take_profit_atr': [7],  # 止盈ATR倍数
+        'stop_loss_atr': [10],  # 止损ATR倍数
+        'atr_period': [14],  # ATR周期
+        'sma_period': [30],  # 均线周期
     }
+    logger.info("=== Walk-Forward Analysis 参数网格 ===")
+    for param, values in param_grid.items():
+        logger.info(f"{param}: {values}")
     
     # 执行Walk-Forward分析
     wf_analyzer.run_walk_forward_analysis(
@@ -134,6 +129,9 @@ def run_walk_forward():
         test_quarters=config_manager.validation_config.get("test_quarters", 2)
     )
     
+    # 保存结果
+    wf_analyzer.save_results()
+
     # 显示汇总统计
     summary_stats = wf_analyzer.get_summary_statistics()
     logger.info("=== Walk-Forward Analysis 汇总统计 ===")
@@ -142,9 +140,6 @@ def run_walk_forward():
             logger.info(f"{key}: {value:.4f}")
         else:
             logger.info(f"{key}: {value}")
-    
-    # 保存结果
-    wf_analyzer.save_results()
     
     return wf_analyzer
 

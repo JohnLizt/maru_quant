@@ -1,0 +1,271 @@
+2025-07-30 15:42:32 - main - INFO - 运行Walk-Forward Analysis...
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 当前使用的策略: SimpleBreakout
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 检测到空的日期参数，正在加载数据获取日期范围...
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 使用数据集开始日期: 2020-01-24
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 使用数据集结束日期: 2025-07-26
+2025-07-30 15:42:32 - main - INFO - === Walk-Forward Analysis 参数网格 ===
+2025-07-30 15:42:32 - main - INFO - window: [16]
+2025-07-30 15:42:32 - main - INFO - threshold: [1]
+2025-07-30 15:42:32 - main - INFO - max_hold_bars: [36]
+2025-07-30 15:42:32 - main - INFO - take_profit_atr: [7]
+2025-07-30 15:42:32 - main - INFO - stop_loss_atr: [10]
+2025-07-30 15:42:32 - main - INFO - atr_period: [14]
+2025-07-30 15:42:32 - main - INFO - sma_period: [30]
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 开始Walk-Forward Analysis...
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 训练期: 4个季度, 测试期: 2个季度
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 总共生成 17 个窗口
+2025-07-30 15:42:32 - walk forward analyzer - INFO - === 窗口 1/17 ===
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 训练期: 2020-01-24 至 2021-01-24
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 测试期: 2021-01-24 至 2021-07-24
+2025-07-30 15:42:32 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:34 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:34 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:35 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 夏普比率: 2.72
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 最大回撤: 7.19%
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 收益率: 27.53%
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 胜率: 57.50%
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 盈亏比: 1.49
+2025-07-30 15:42:35 - walk forward analyzer - INFO - Walk forward 效率: 2.02
+2025-07-30 15:42:35 - walk forward analyzer - INFO - === 窗口 2/17 ===
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 训练期: 2020-04-24 至 2021-04-24
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 测试期: 2021-04-24 至 2021-10-24
+2025-07-30 15:42:35 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:37 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:37 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:38 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 夏普比率: 0.96
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 最大回撤: 12.72%
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 收益率: 8.44%
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 胜率: 46.51%
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 盈亏比: 1.44
+2025-07-30 15:42:38 - walk forward analyzer - INFO - Walk forward 效率: 0.63
+2025-07-30 15:42:38 - walk forward analyzer - INFO - === 窗口 3/17 ===
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 训练期: 2020-07-24 至 2021-07-24
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 测试期: 2021-07-24 至 2022-01-24
+2025-07-30 15:42:38 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:40 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:40 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:41 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 夏普比率: -0.64
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 最大回撤: 17.56%
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 收益率: -8.28%
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 胜率: 40.82%
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 盈亏比: 1.21
+2025-07-30 15:42:41 - walk forward analyzer - INFO - Walk forward 效率: -0.57
+2025-07-30 15:42:41 - walk forward analyzer - INFO - === 窗口 4/17 ===
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 训练期: 2020-10-24 至 2021-10-24
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 测试期: 2021-10-24 至 2022-04-24
+2025-07-30 15:42:41 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:43 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:43 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:44 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 夏普比率: 1.25
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 最大回撤: 19.49%
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 收益率: 17.79%
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 胜率: 51.02%
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 盈亏比: 1.30
+2025-07-30 15:42:44 - walk forward analyzer - INFO - Walk forward 效率: 0.84
+2025-07-30 15:42:44 - walk forward analyzer - INFO - === 窗口 5/17 ===
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 训练期: 2021-01-24 至 2022-01-24
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 测试期: 2022-01-24 至 2022-07-24
+2025-07-30 15:42:44 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:45 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:45 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:46 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 夏普比率: 1.08
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 最大回撤: 18.65%
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 收益率: 13.67%
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 胜率: 46.15%
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 盈亏比: 1.54
+2025-07-30 15:42:46 - walk forward analyzer - INFO - Walk forward 效率: 1.02
+2025-07-30 15:42:46 - walk forward analyzer - INFO - === 窗口 6/17 ===
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 训练期: 2021-04-24 至 2022-04-24
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 测试期: 2022-04-24 至 2022-10-24
+2025-07-30 15:42:46 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:48 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:48 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:49 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 夏普比率: -0.85
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 最大回撤: 16.12%
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 收益率: -11.35%
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 胜率: 44.44%
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 盈亏比: 0.93
+2025-07-30 15:42:49 - walk forward analyzer - INFO - Walk forward 效率: -0.78
+2025-07-30 15:42:49 - walk forward analyzer - INFO - === 窗口 7/17 ===
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 训练期: 2021-07-24 至 2022-07-24
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 测试期: 2022-07-24 至 2023-01-24
+2025-07-30 15:42:49 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:51 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:51 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:52 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 夏普比率: 1.06
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 最大回撤: 16.74%
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 收益率: 12.39%
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 胜率: 53.49%
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 盈亏比: 1.20
+2025-07-30 15:42:52 - walk forward analyzer - INFO - Walk forward 效率: 3.16
+2025-07-30 15:42:52 - walk forward analyzer - INFO - === 窗口 8/17 ===
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 训练期: 2021-10-24 至 2022-10-24
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 测试期: 2022-10-24 至 2023-04-24
+2025-07-30 15:42:52 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:54 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:54 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:55 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 夏普比率: 2.21
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 最大回撤: 18.16%
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 收益率: 30.18%
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 胜率: 56.25%
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 盈亏比: 1.37
+2025-07-30 15:42:55 - walk forward analyzer - INFO - Walk forward 效率: 5.98
+2025-07-30 15:42:55 - walk forward analyzer - INFO - === 窗口 9/17 ===
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 训练期: 2022-01-24 至 2023-01-24
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 测试期: 2023-01-24 至 2023-07-24
+2025-07-30 15:42:55 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:42:57 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:42:57 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:42:58 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 夏普比率: 1.30
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 最大回撤: 17.63%
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 收益率: 17.66%
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 胜率: 54.35%
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 盈亏比: 1.17
+2025-07-30 15:42:58 - walk forward analyzer - INFO - Walk forward 效率: 1.09
+2025-07-30 15:42:58 - walk forward analyzer - INFO - === 窗口 10/17 ===
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 训练期: 2022-04-24 至 2023-04-24
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 测试期: 2023-04-24 至 2023-10-24
+2025-07-30 15:42:58 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:00 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:00 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:01 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 夏普比率: 1.21
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 最大回撤: 11.08%
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 收益率: 12.15%
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 胜率: 58.97%
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 盈亏比: 0.99
+2025-07-30 15:43:01 - walk forward analyzer - INFO - Walk forward 效率: 1.67
+2025-07-30 15:43:01 - walk forward analyzer - INFO - === 窗口 11/17 ===
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 训练期: 2022-07-24 至 2023-07-24
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 测试期: 2023-07-24 至 2024-01-24
+2025-07-30 15:43:01 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:03 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:03 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:04 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 夏普比率: 1.92
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 最大回撤: 9.81%
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 收益率: 22.46%
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 胜率: 57.50%
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 盈亏比: 1.32
+2025-07-30 15:43:04 - walk forward analyzer - INFO - Walk forward 效率: 1.77
+2025-07-30 15:43:04 - walk forward analyzer - INFO - === 窗口 12/17 ===
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 训练期: 2022-10-24 至 2023-10-24
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 测试期: 2023-10-24 至 2024-04-24
+2025-07-30 15:43:04 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:06 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 夏普比率: 2.83
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 最大回撤: 8.33%
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 收益率: 44.62%
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 胜率: 58.00%
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 盈亏比: 1.64
+2025-07-30 15:43:06 - walk forward analyzer - INFO - Walk forward 效率: 1.64
+2025-07-30 15:43:06 - walk forward analyzer - INFO - === 窗口 13/17 ===
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 训练期: 2023-01-24 至 2024-01-24
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 测试期: 2024-01-24 至 2024-07-24
+2025-07-30 15:43:06 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:08 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:08 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:09 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 夏普比率: 2.52
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 最大回撤: 10.39%
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 收益率: 41.34%
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 胜率: 57.14%
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 盈亏比: 1.60
+2025-07-30 15:43:09 - walk forward analyzer - INFO - Walk forward 效率: 1.65
+2025-07-30 15:43:09 - walk forward analyzer - INFO - === 窗口 14/17 ===
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 训练期: 2023-04-24 至 2024-04-24
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 测试期: 2024-04-24 至 2024-10-24
+2025-07-30 15:43:09 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:11 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:11 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:12 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 夏普比率: 1.78
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 最大回撤: 13.55%
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 收益率: 29.71%
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 胜率: 56.25%
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 盈亏比: 1.27
+2025-07-30 15:43:12 - walk forward analyzer - INFO - Walk forward 效率: 0.86
+2025-07-30 15:43:12 - walk forward analyzer - INFO - === 窗口 15/17 ===
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 训练期: 2023-07-24 至 2024-07-24
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 测试期: 2024-07-24 至 2025-01-24
+2025-07-30 15:43:12 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:14 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:14 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:15 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 夏普比率: 2.76
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 最大回撤: 12.93%
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 收益率: 50.12%
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 胜率: 66.00%
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 盈亏比: 1.11
+2025-07-30 15:43:15 - walk forward analyzer - INFO - Walk forward 效率: 1.20
+2025-07-30 15:43:15 - walk forward analyzer - INFO - === 窗口 16/17 ===
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 训练期: 2023-10-24 至 2024-10-24
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 测试期: 2024-10-24 至 2025-04-24
+2025-07-30 15:43:15 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:17 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:17 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:18 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 夏普比率: 3.24
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 最大回撤: 15.64%
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 收益率: 70.12%
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 胜率: 68.18%
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 盈亏比: 1.05
+2025-07-30 15:43:18 - walk forward analyzer - INFO - Walk forward 效率: 1.35
+2025-07-30 15:43:18 - walk forward analyzer - INFO - === 窗口 17/17 ===
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 训练期: 2024-01-24 至 2025-01-24
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 测试期: 2025-01-24 至 2025-07-24
+2025-07-30 15:43:18 - walk forward analyzer - INFO - 正在训练期优化参数...
+2025-07-30 15:43:20 - walk forward analyzer - INFO - 最佳参数: {'window': 16, 'threshold': 1, 'max_hold_bars': 36, 'take_profit_atr': 7, 'stop_loss_atr': 10, 'atr_period': 14, 'sma_period': 30}
+2025-07-30 15:43:20 - walk forward analyzer - INFO - 正在测试期验证...
+2025-07-30 15:43:22 - walk forward analyzer - INFO - === 测试期验证结果 === 
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 夏普比率: 1.51
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 最大回撤: 25.33%
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 收益率: 38.70%
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 胜率: 56.25%
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 盈亏比: 1.03
+2025-07-30 15:43:22 - walk forward analyzer - INFO - Walk forward 效率: 0.62
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 正在保存训练期优化结果...
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 1, 'train_start': '2020-01-24', 'train_end': '2021-01-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.3464063252315557, 'max_drawdown': 15.81127621220384, 'total_return': 0.41106092870047745, 'total_trade': 107.0, 'win_rate': 56.074766355140184, 'avg_win': 12.685755585496326, 'avg_loss': -11.802887250628508, 'P/L_ratio': 1.074801047923321, 'final_value': 705.5304643502387}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 2, 'train_start': '2020-04-24', 'train_end': '2021-04-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.5344596801166044, 'max_drawdown': 17.558105231678734, 'total_return': 0.45090178267173814, 'total_trade': 102.0, 'win_rate': 56.86274509803921, 'avg_win': 12.293741596546589, 'avg_loss': -11.081502755996214, 'P/L_ratio': 1.109393000863031, 'final_value': 725.4508913358691}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 3, 'train_start': '2020-07-24', 'train_end': '2021-07-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.1220685937856434, 'max_drawdown': 21.099902470621753, 'total_return': 0.32763613594495405, 'total_trade': 95.0, 'win_rate': 54.736842105263165, 'avg_win': 12.211216747580169, 'avg_loss': -10.957330300039361, 'P/L_ratio': 1.1144335721572893, 'final_value': 663.818067972477}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 4, 'train_start': '2020-10-24', 'train_end': '2021-10-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.4897308309990678, 'max_drawdown': 12.093153409467, 'total_return': 0.3360921139282118, 'total_trade': 89.0, 'win_rate': 52.80898876404494, 'avg_win': 11.519067797373367, 'avg_loss': -8.88928879791531, 'P/L_ratio': 1.2958368278095302, 'final_value': 668.0460569641059}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 5, 'train_start': '2021-01-24', 'train_end': '2022-01-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.060221777605858, 'max_drawdown': 13.949767194422488, 'total_return': 0.1925248905705689, 'total_trade': 89.0, 'win_rate': 48.31460674157304, 'avg_win': 11.101673380446746, 'avg_loss': -8.284989349433191, 'P/L_ratio': 1.339974369575533, 'final_value': 596.2624452852845}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 6, 'train_start': '2021-04-24', 'train_end': '2022-04-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.097577732753643, 'max_drawdown': 18.58062638418295, 'total_return': 0.25811719925247917, 'total_trade': 93.0, 'win_rate': 48.38709677419355, 'avg_win': 12.237855314798667, 'avg_loss': -8.784268532077121, 'P/L_ratio': 1.3931558752001076, 'final_value': 629.0585996262396}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 7, 'train_start': '2021-07-24', 'train_end': '2022-07-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 0.334868252952947, 'max_drawdown': 20.871499100289423, 'total_return': 0.055141678136237035, 'total_trade': 88.0, 'win_rate': 43.18181818181818, 'avg_win': 13.292990816998445, 'avg_loss': -9.455071839556457, 'P/L_ratio': 1.4059111387589445, 'final_value': 527.5708390681185}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 8, 'train_start': '2021-10-24', 'train_end': '2022-10-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 0.36945468858872127, 'max_drawdown': 19.492681785351046, 'total_return': 0.0644109979002701, 'total_trade': 85.0, 'win_rate': 48.23529411764706, 'avg_win': 12.300218476610102, 'avg_loss': -10.729624058883639, 'P/L_ratio': 1.1463792588731088, 'final_value': 532.205498950135}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 9, 'train_start': '2022-01-24', 'train_end': '2023-01-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.1957920415237364, 'max_drawdown': 18.654587756134806, 'total_return': 0.30166905488750834, 'total_trade': 84.0, 'win_rate': 51.19047619047619, 'avg_win': 12.62000077959502, 'avg_loss': -9.556719660459327, 'P/L_ratio': 1.320536881688592, 'final_value': 650.8345274437542}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 10, 'train_start': '2022-04-24', 'train_end': '2023-04-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 0.7249821739631644, 'max_drawdown': 20.230189472140353, 'total_return': 0.17260514232630952, 'total_trade': 86.0, 'win_rate': 50.0, 'avg_win': 12.158432616826502, 'avg_loss': -10.151396078148505, 'P/L_ratio': 1.1977103960112703, 'final_value': 586.3025711631548}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 11, 'train_start': '2022-07-24', 'train_end': '2023-07-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.0855299048630844, 'max_drawdown': 19.696685247996054, 'total_return': 0.27675458590190305, 'total_trade': 90.0, 'win_rate': 53.333333333333336, 'avg_win': 11.198730804016762, 'avg_loss': -9.503852039091766, 'P/L_ratio': 1.1783359797641553, 'final_value': 638.3772929509515}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 12, 'train_start': '2022-10-24', 'train_end': '2023-10-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.7224845355440104, 'max_drawdown': 18.157762688914808, 'total_return': 0.4187372807367642, 'total_trade': 89.0, 'win_rate': 57.30337078651685, 'avg_win': 10.898346462452556, 'avg_loss': -9.117027084649983, 'P/L_ratio': 1.1953837979489736, 'final_value': 709.3686403683821}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 13, 'train_start': '2023-01-24', 'train_end': '2024-01-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 1.5216502657287858, 'max_drawdown': 17.6301396360373, 'total_return': 0.40119184377139755, 'total_trade': 86.0, 'win_rate': 55.81395348837209, 'avg_win': 11.821098981299931, 'avg_loss': -9.653074453071024, 'P/L_ratio': 1.2245941993681788, 'final_value': 700.5959218856988}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 14, 'train_start': '2023-04-24', 'train_end': '2024-04-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 2.0785495609283804, 'max_drawdown': 11.079715719377566, 'total_return': 0.5677226090991622, 'total_trade': 89.0, 'win_rate': 58.42696629213483, 'avg_win': 11.640349981133678, 'avg_loss': -8.687483634307316, 'P/L_ratio': 1.3398989248354198, 'final_value': 783.8613045495811}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 15, 'train_start': '2023-07-24', 'train_end': '2024-07-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 2.2919068813268173, 'max_drawdown': 9.805176392597183, 'total_return': 0.6595771480302721, 'total_trade': 90.0, 'win_rate': 57.77777777777777, 'avg_win': 12.747771652780074, 'avg_loss': -8.765672419195477, 'P/L_ratio': 1.4542833730432831, 'final_value': 829.7885740151361}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 16, 'train_start': '2023-10-24', 'train_end': '2024-10-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 2.409951657362392, 'max_drawdown': 9.626678837415195, 'total_return': 0.7734008074049773, 'total_trade': 98.0, 'win_rate': 58.16326530612245, 'avg_win': 13.91983711305287, 'avg_loss': -9.920251505890864, 'P/L_ratio': 1.4031738111465182, 'final_value': 886.7004037024886}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - {'window_idx': 17, 'train_start': '2024-01-24', 'train_end': '2025-01-24', 'window': 16.0, 'threshold': 1.0, 'max_hold_bars': 36.0, 'take_profit_atr': 7.0, 'stop_loss_atr': 10.0, 'atr_period': 14.0, 'sma_period': 30.0, 'sharpe_ratio': 2.4426421970957195, 'max_drawdown': 10.980549778981231, 'total_return': 0.8574648602283558, 'total_trade': 100.0, 'win_rate': 61.0, 'avg_win': 14.034644292716454, 'avg_loss': -10.958483890808381, 'P/L_ratio': 1.2807104005042391, 'final_value': 928.7324301141779}
+2025-07-30 15:43:22 - walk forward analyzer - INFO - 结果已保存到 utils/walk_forward_results
+2025-07-30 15:43:22 - main - INFO - === Walk-Forward Analysis 汇总统计 ===
+2025-07-30 15:43:22 - main - INFO - Strategy: SimpleBreakout
+2025-07-30 15:43:22 - main - INFO - Total Windows: 17
+2025-07-30 15:43:22 - main - INFO - Avg Test Sharpe: 1.7367
+2025-07-30 15:43:22 - main - INFO - Avg Test MaxDd: 14.9393
+2025-07-30 15:43:22 - main - INFO - WFE: 1.4636
+2025-07-30 15:43:22 - main - INFO - Std WFE: 1.4898
+2025-07-30 15:43:22 - main - INFO - Avg Test WinRate: 56.1124
+2025-07-30 15:43:22 - main - INFO - Avg Test PL Ratio: 1.2534
+2025-07-30 15:43:22 - main - INFO - Avg Test Return: 0.2874
+2025-07-30 15:43:22 - main - INFO - Std Test Return: 0.2066
+2025-07-30 15:43:22 - main - INFO - Best Test Return: 0.7012
+2025-07-30 15:43:22 - main - INFO - Worst Test Return: -0.1135
+2025-07-30 15:43:22 - main - INFO - Period Win Rate: 0.8824
+2025-07-30 15:43:22 - main - INFO - Consistency Score: 1.1883
