@@ -2,21 +2,25 @@ import backtrader as bt
 import itertools
 import pandas as pd
 from typing import Dict, List, Any, Tuple
-from utils.backtest_runner import run_backtest_with_params
+from utils.backtest_runner import BacktestRunner
 from utils.logger import get_logger
 
 class GridSearchOptimizer:
     def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100, tick_type="stock"):
         self.strategy_class = strategy_class
         self.data_feed = data_feed
-        self.cash = cash
-        self.commission = commission
-        self.stake = stake
-        self.sizer_type = sizer_type
-        self.size_percent = size_percent
-        self.tick_type = tick_type
         self.results = []
         self.logger = get_logger("main")
+        
+        # 创建BacktestRunner实例
+        self.backtest_runner = BacktestRunner(
+            cash=cash,
+            commission=commission,
+            stake=stake,
+            sizer_type=sizer_type,
+            size_percent=size_percent,
+            tick_type=tick_type
+        )
     
     def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio']) -> pd.DataFrame:
         """
@@ -42,17 +46,11 @@ class GridSearchOptimizer:
             # 构建参数字典
             params = dict(zip(param_names, param_combo))
             
-            # 运行单次回测
-            result = run_backtest_with_params(
+            # 使用BacktestRunner运行单次回测
+            result = self.backtest_runner.run(
                 strategy_class=self.strategy_class,
                 data_feed=self.data_feed,
-                params=params,
-                cash=self.cash,
-                commission=self.commission,
-                stake=self.stake,
-                sizer_type=self.sizer_type,
-                size_percent=self.size_percent,
-                tick_type=self.tick_type
+                params=params
             )
 
             if result:
@@ -86,7 +84,7 @@ class GridSearchOptimizer:
             return {}
 
         # 提取参数（排除指标列）
-        metric_cols = ['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio']
+        metric_cols = ['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio', 'total_trade', 'avg_win', 'avg_loss', 'final_value']
         param_dict = {k: v for k, v in best_result.items() if k not in metric_cols}
         
         return param_dict

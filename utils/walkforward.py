@@ -5,7 +5,7 @@ import warnings
 
 from utils.optimizer import GridSearchOptimizer
 from utils.dataloader import load_data
-from utils.backtest_runner import run_backtest_with_params
+from utils.backtest_runner import BacktestRunner
 from utils.logger import get_logger
 
 class WalkForwardAnalyzer:
@@ -25,6 +25,16 @@ class WalkForwardAnalyzer:
         self.strategy_class = strategy_class
         self.data_file = data_file
         self.logger = get_logger("main")
+        
+        # 创建BacktestRunner实例
+        self.backtest_runner = BacktestRunner(
+            cash=cash,
+            commission=commission,
+            stake=stake,
+            sizer_type=sizer_type,
+            size_percent=size_percent,
+            tick_type=tick_type
+        )
         
         # 处理空的start_date和end_date - 只加载一次数据
         need_load_data = (not start_date or start_date == "") or (not end_date or end_date == "")
@@ -204,17 +214,11 @@ class WalkForwardAnalyzer:
             # 加载测试期数据
             test_data = load_data(self.data_file, test_start, test_end)
             
-            # 使用公共回测函数
-            result = run_backtest_with_params(
+            # 使用BacktestRunner
+            result = self.backtest_runner.run(
                 strategy_class=self.strategy_class,
                 data_feed=test_data,
-                params=params,
-                cash=self.cash,
-                commission=self.commission,
-                stake=self.stake,
-                sizer_type=self.sizer_type,
-                size_percent=self.size_percent,
-                tick_type=self.tick_type
+                params=params
             )
             
             return result

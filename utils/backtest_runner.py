@@ -1,3 +1,4 @@
+import logging
 import backtrader as bt
 import warnings
 from typing import Dict, Any, Optional
@@ -5,84 +6,111 @@ from typing import Dict, Any, Optional
 from analyzer.sharperatio_30min import SharpeRatio_30min
 from analyzer.WinLossRatioAnalyzer import WinLossRatioAnalyzer
 from trade.CommissionInfo import comm_ibkr_XAUUSD
+from utils.config_manager import config_manager
 
-def run_backtest_with_params(
-    strategy_class,
-    data_feed,
-    params: Dict[str, Any],
-    cash: float = 100000,
-    commission: float = 0.00015,
-    stake: float = 1,
-    sizer_type: str = "fixed",
-    size_percent: int = 100,
-    tick_type: str = "stock",
-) -> Optional[Dict[str, Any]]:
+
+class BacktestRunner:
     """
-    运行单次回测的通用函数
+    回测运行器类，用于配置和执行回测
+    """
     
-    Args:
-        strategy_class: 策略类
-        data_feed: 数据源
-        params: 策略参数
-        cash: 初始资金
-        commission: 佣金率
-        stake: 固定仓位大小
-        sizer_type: 仓位管理类型 ("fixed" 或 "percents")
-        size_percent: 百分比仓位大小
-        tick_type: 交易品种类型 ("stock" 或其他)
+    def __init__(
+        self,
+        cash: Optional[float] = None,
+        commission: Optional[float] = None,
+        stake: Optional[float] = None,
+        sizer_type: Optional[str] = None,
+        size_percent: Optional[int] = None,
+        tick_type: Optional[str] = None,
+    ):
+        """
+        初始化回测运行器
+        如果参数为None，则使用配置文件中的默认值
+        """
+        self.cash = cash or config_manager.cash
+        self.commission = commission or config_manager.commission
+        self.stake = stake or config_manager.fixed_size_stake
+        self.sizer_type = sizer_type or config_manager.sizer_type
+        self.size_percent = size_percent or config_manager.size_percent
+        self.tick_type = tick_type or config_manager.tick_type
+
+        self.logger = logging.getLogger("main")
+    
+    @classmethod
+    def from_config(cls):
+        """从配置文件创建BacktestRunner实例"""
+        return cls(**config_manager.get_backtest_params())
+    
+    def run(
+        self,
+        strategy_class,
+        data_feed,
+        params: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        """
+        运行单次回测
         
-    Returns:
-        包含回测结果的字典，失败时返回None
-    """
-    try:
-        cerebro = bt.Cerebro()
-        
-        # 添加数据
-        cerebro.adddata(data_feed)
-        
-        # 添加策略和参数
-        cerebro.addstrategy(strategy_class, **params)
-        
-        # 设置broker参数
-        cerebro.broker.setcash(cash)
-        
-        # 设置佣金
-        if tick_type == "CFD":
-            cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
-        else:
-            cerebro.broker.setcommission(commission)
-        
-        # 设置仓位管理
-        if sizer_type == "fixed":
-            cerebro.addsizer(bt.sizers.FixedSize, stake=stake)
-        elif sizer_type == "percents":
-            cerebro.addsizer(bt.sizers.PercentSizerInt, percents=size_percent)
-        
-        # 添加分析器
-        cerebro.addanalyzer(SharpeRatio_30min, _name='sharpe_ratio')
-        cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
-        cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
-        
-        # 运行回测
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            result = cerebro.run()
-        
-        # 提取结果
-        strat = result[0]
-        final_value = cerebro.broker.getvalue()
-        
-        # 构建结果字典
-        backtest_result = {
-            'sharpe_ratio': strat.analyzers.sharpe_ratio.get_analysis().get('sharperatio', 0),
-            'max_drawdown': strat.analyzers.drawdown.get_analysis().get('max', {}).get('drawdown', 0),
-            'total_return': (final_value - cash) / cash,
-            'win_rate': strat.analyzers.winloss.get_analysis().get('win_rate', 0),
-            'P/L_ratio': strat.analyzers.winloss.get_analysis().get('P/L_ratio', 0),
-        }
-        
-        return backtest_result
-        
-    except Exception as e:
-        print(f"回测失败，参数: {params}, 错误: {str(e)}")
-        return None
+        Args:
+            strategy_class: 策略类
+            data_feed: 数据源
+            params: 策略参数
+            
+        Returns:
+            包含回测结果的字典，失败时返回None
+        """
+        try:
+            cerebro = bt.Cerebro()
+            
+            # 添加数据
+            cerebro.adddata(data_feed)
+            
+            # 添加策略和参数
+            cerebro.addstrategy(strategy_class, **params)
+            
+            # 设置broker参数
+            cerebro.broker.setcash(self.cash)
+            
+            # 设置佣金
+            if self.tick_type == "CFD":
+                cerebro.broker.addcommissioninfo(comm_ibkr_XAUUSD)
+            else:
+                cerebro.broker.setcommission(self.commission)
+            
+            # 设置仓位管理
+            if self.sizer_type == "fixed":
+                cerebro.addsizer(bt.sizers.FixedSize, stake=self.stake)
+            elif self.sizer_type == "percents":
+                cerebro.addsizer(bt.sizers.PercentSizerInt, percents=self.size_percent)
+            
+            # 添加分析器
+            cerebro.addanalyzer(SharpeRatio_30min, _name='sharpe_ratio')
+            cerebro.addanalyzer(bt.analyzers.DrawDown, _name='drawdown')
+            cerebro.addanalyzer(WinLossRatioAnalyzer, _name='winloss')
+            
+            # 运行回测
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                result = cerebro.run()
+            
+            # 提取结果
+            strat = result[0]
+            final_value = cerebro.broker.getvalue()
+            
+            # 构建结果字典
+            backtest_result = {
+                'sharpe_ratio': strat.analyzers.sharpe_ratio.get_analysis().get('sharperatio', 0),
+                'max_drawdown': strat.analyzers.drawdown.get_analysis().get('max', {}).get('drawdown', 0),
+                'total_return': (final_value - self.cash) / self.cash,
+                'total_trade': strat.analyzers.winloss.get_analysis().get('total_trades', 0),
+                'win_rate': strat.analyzers.winloss.get_analysis().get('win_rate', 0),
+                'avg_win': strat.analyzers.winloss.get_analysis().get('avg_win', 0),
+                'avg_loss': strat.analyzers.winloss.get_analysis().get('avg_loss', 0),
+                'P/L_ratio': strat.analyzers.winloss.get_analysis().get('P/L_ratio', 0),
+                'final_value': final_value,
+            }
+            
+            return backtest_result
+            
+        except Exception as e:
+            print(f"回测失败，参数: {params}, 错误: {str(e)}")
+            return None
