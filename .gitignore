@@ -1,5 +1,6 @@
-.vscode/*
+.vscode/
 **.pyc
-data/*
+data/
+log/
 utils/optimize_result/
-utils/walk_forward_results
+utils/walk_forward_results/

@@ -17,6 +17,7 @@ from utils.fileoperator import extract_dates_from_filename
 from utils.optimizer import GridSearchOptimizer
 from trade.CommissionInfo import comm_ibkr_XAUUSD
 from utils.walkforward import WalkForwardAnalyzer
+from utils.logger import setup_logger, get_logger
 
 # config
 config = load_config()
@@ -47,10 +48,20 @@ fixed_commission = broker_config.get("fixed_commission", False)
 commission = broker_config.get("commission", 0.00015)  # Default commission rate
 spread = broker_config.get("spread", 0.16)  # Default spread
 
+# parse start-end date from filename
 fname_start_date, fname_end_date = extract_dates_from_filename(dataFile)
+
+# Initialize logger
+logger_config = config.get("logger_config", {})
+log_level = logger_config.get("log_level", "INFO")
+log_to_console = logger_config.get("log_to_console", True)
+log_to_file = logger_config.get("log_to_file", True)
+logger = setup_logger("main", log_level, log_to_file)
+
 
 def run_backtest():
     """运行常规回测"""
+    logger.info("start backtesting...")
     cerebro = bt.Cerebro()
     
     # load data
@@ -93,16 +104,16 @@ def run_backtest():
     result = cerebro.run()
 
     # 显示结果
-    print('================= backtesting results ======================')
-    print(f"from: {fname_start_date} to {fname_end_date}")
-    print('sharpe_ratio:', result[0].analyzers.sharpe_ratio.get_analysis())
-    print('drawdown:', result[0].analyzers.drawdown.get_analysis()['max']['drawdown']) 
-    print('Win/Loss/Profit-Loss Ratio:', result[0].analyzers.winloss.get_analysis())
-    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    logger.info('================= backtesting results ======================')
+    logger.info(f"from: {fname_start_date} to {fname_end_date}")
+    logger.info('sharpe_ratio: %s', result[0].analyzers.sharpe_ratio.get_analysis())
+    logger.info('max drawdown: %.4f', result[0].analyzers.drawdown.get_analysis()['max']['drawdown'])
+    logger.info('Win/Loss/PL Ratio: %s', result[0].analyzers.winloss.get_analysis())
+    logger.info('Final Portfolio Value: %.2f', cerebro.broker.getvalue())
     
     end_value = cerebro.broker.getvalue()
     profit_rate = (end_value - cash) / cash
-    print('Final Profit Rate: {:.2%}'.format(profit_rate))
+    logger.info('Final Profit Rate: {:.2%}'.format(profit_rate))
     warnings.filterwarnings("ignore", category=UserWarning, module="backtrader.plot.locator")
     cerebro.plot(
         style='candlestick',
@@ -112,7 +123,7 @@ def run_backtest():
 
 def run_optimization():
     """运行参数优化"""
-    print("开始参数优化...")
+    logger.info("开始参数优化...")
     
     # 加载数据
     data_feed = load_data(dataFile, start_date, end_date)
@@ -143,23 +154,23 @@ def run_optimization():
     results_df = optimizer.optimize(param_grid)
     
     # 显示结果
-    print("\n=== 优化结果 (前10名) ===")
-    print(results_df.head(10).to_string(index=False))
+    logger.info("=== 优化结果 (前10名) ===")
+    logger.info(results_df.head(10).to_string(index=False))
     
     # 获取最佳参数
     best_params = optimizer.get_best_params('sharpe_ratio')
-    print(f"\n=== 最佳参数组合 (按夏普比率排序) ===")
+    logger.info("=== 最佳参数组合 (按夏普比率排序) ===")
     for param, value in best_params.items():
-        print(f"{param}: {value}")
+        logger.info(f"{param}: {value}")
     
     # 保存结果
     results_df.to_csv('utils/optimize_result/optimization_results.csv', index=False)
-    print("\n优化结果已保存到 utils/optimize_result/optimization_results.csv")
+    logger.info("优化结果已保存到 utils/optimize_result/optimization_results.csv")
 
 
 def run_walk_forward():
     """运行Walk-Forward Analysis"""
-    print("运行Walk-Forward Analysis...")
+    logger.info("运行Walk-Forward Analysis...")
     
     # 创建分析器
     wf_analyzer = WalkForwardAnalyzer(
@@ -196,12 +207,12 @@ def run_walk_forward():
     
     # 显示汇总统计
     summary_stats = wf_analyzer.get_summary_statistics()
-    print("\n=== Walk-Forward Analysis 汇总统计 ===")
+    logger.info("=== Walk-Forward Analysis 汇总统计 ===")
     for key, value in summary_stats.items():
         if isinstance(value, float):
-            print(f"{key}: {value:.4f}")
+            logger.info(f"{key}: {value:.4f}")
         else:
-            print(f"{key}: {value}")
+            logger.info(f"{key}: {value}")
     
     # 保存结果
     wf_analyzer.save_results()

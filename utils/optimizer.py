@@ -3,6 +3,7 @@ import itertools
 import pandas as pd
 from typing import Dict, List, Any, Tuple
 from utils.backtest_runner import run_backtest_with_params
+from utils.logger import get_logger
 
 class GridSearchOptimizer:
     def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100, tick_type="stock"):
@@ -15,6 +16,7 @@ class GridSearchOptimizer:
         self.size_percent = size_percent
         self.tick_type = tick_type
         self.results = []
+        self.logger = get_logger("main")
     
     def optimize(self, param_grid: Dict[str, List[Any]], metrics=['sharpe_ratio', 'total_return', 'max_drawdown', 'win_rate', 'P/L_ratio']) -> pd.DataFrame:
         """
@@ -32,10 +34,10 @@ class GridSearchOptimizer:
         param_values = list(param_grid.values())
         param_combinations = list(itertools.product(*param_values))
         
-        print(f"开始网格搜索，共 {len(param_combinations)} 组参数...")
+        self.logger.info(f"开始网格搜索，共 {len(param_combinations)} 组参数...")
         
         for i, param_combo in enumerate(param_combinations):
-            print(f"网格搜索进度: {i+1}/{len(param_combinations)}")
+            self.logger.info(f"网格搜索进度: {i+1}/{len(param_combinations)}")
             
             # 构建参数字典
             params = dict(zip(param_names, param_combo))

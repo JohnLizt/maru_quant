@@ -6,6 +6,7 @@ import warnings
 from utils.optimizer import GridSearchOptimizer
 from utils.dataloader import load_data
 from utils.backtest_runner import run_backtest_with_params
+from utils.logger import get_logger
 
 class WalkForwardAnalyzer:
     def __init__(self, strategy_class, data_file, start_date, end_date, 
@@ -23,23 +24,24 @@ class WalkForwardAnalyzer:
         """
         self.strategy_class = strategy_class
         self.data_file = data_file
+        self.logger = get_logger("main")
         
         # 处理空的start_date和end_date - 只加载一次数据
         need_load_data = (not start_date or start_date == "") or (not end_date or end_date == "")
         if need_load_data:
-            print("检测到空的日期参数，正在加载数据获取日期范围...")
+            self.logger.info("检测到空的日期参数，正在加载数据获取日期范围...")
             full_data = load_data(data_file, None, None)
             data_index = full_data._dataname.index
             
             if not start_date or start_date == "":
                 self.start_date = pd.to_datetime(data_index[0])
-                print(f"使用数据集开始日期: {self.start_date.strftime('%Y-%m-%d')}")
+                self.logger.info(f"使用数据集开始日期: {self.start_date.strftime('%Y-%m-%d')}")
             else:
                 self.start_date = pd.to_datetime(start_date)
                 
             if not end_date or end_date == "":
                 self.end_date = pd.to_datetime(data_index[-1])
-                print(f"使用数据集结束日期: {self.end_date.strftime('%Y-%m-%d')}")
+                self.logger.info(f"使用数据集结束日期: {self.end_date.strftime('%Y-%m-%d')}")
             else:
                 self.end_date = pd.to_datetime(end_date)
         else:
@@ -105,20 +107,20 @@ class WalkForwardAnalyzer:
             train_quarters: 训练期季度数
             test_quarters: 测试期季度数
         """
-        print(f"开始Walk-Forward Analysis...")
-        print(f"训练期: {train_quarters}个季度, 测试期: {test_quarters}个季度")
+        self.logger.info(f"开始Walk-Forward Analysis...")
+        self.logger.info(f"训练期: {train_quarters}个季度, 测试期: {test_quarters}个季度")
         
         # 生成时间窗口
         windows = self.generate_quarterly_windows(train_quarters, test_quarters)
-        print(f"总共生成 {len(windows)} 个窗口")
+        self.logger.info(f"总共生成 {len(windows)} 个窗口")
         
         for i, (train_start, train_end, test_start, test_end) in enumerate(windows):
-            print(f"\n=== 窗口 {i+1}/{len(windows)} ===")
-            print(f"训练期: {train_start} 至 {train_end}")
-            print(f"测试期: {test_start} 至 {test_end}")
+            self.logger.info(f"=== 窗口 {i+1}/{len(windows)} ===")
+            self.logger.info(f"训练期: {train_start} 至 {train_end}")
+            self.logger.info(f"测试期: {test_start} 至 {test_end}")
             
             # 1. 训练期优化
-            print("正在训练期优化参数...")
+            self.logger.info("正在训练期优化参数...")
             train_data = load_data(self.data_file, train_start, train_end)
             
             optimizer = GridSearchOptimizer(
@@ -136,12 +138,12 @@ class WalkForwardAnalyzer:
             train_results_df = optimizer.optimize(param_grid)
             
             if train_results_df.empty:
-                print("训练期优化失败，跳过此窗口")
+                self.logger.warning("训练期优化失败，跳过此窗口")
                 continue
                 
             # 获取最佳参数
             best_params = optimizer.get_best_params('sharpe_ratio')
-            print(f"最佳参数: {best_params}")
+            self.logger.info(f"最佳参数: {best_params}")
             
             # 记录训练结果
             train_result = {
@@ -154,7 +156,7 @@ class WalkForwardAnalyzer:
             self.train_results.append(train_result)
             
             # 2. 测试期验证
-            print("正在测试期验证...")
+            self.logger.info("正在测试期验证...")
             test_result = self._run_test_period(best_params, test_start, test_end)
             
             if test_result:
@@ -186,15 +188,15 @@ class WalkForwardAnalyzer:
                     'test_PL_ratio': test_result['P/L_ratio']
                 }
                 self.walk_forward_results.append(summary)
-                print(f"=== 测试期验证结果 === ")
-                print(f"夏普比率: {test_result['sharpe_ratio']:.2f}")
-                print(f"最大回撤: {test_result['max_drawdown']:.2f}%")
-                print(f"收益率: {test_result['total_return']:.2%}")
-                print(f"胜率: {test_result['win_rate']:.2f}%")
-                print(f"盈亏比: {test_result['P/L_ratio']:.2f}")
-                print(f"Walk forward 效率: {summary['efficiency']:.2f}")
+                self.logger.info(f"=== 测试期验证结果 === ")
+                self.logger.info(f"夏普比率: {test_result['sharpe_ratio']:.2f}")
+                self.logger.info(f"最大回撤: {test_result['max_drawdown']:.2f}%")
+                self.logger.info(f"收益率: {test_result['total_return']:.2%}")
+                self.logger.info(f"胜率: {test_result['win_rate']:.2f}%")
+                self.logger.info(f"盈亏比: {test_result['P/L_ratio']:.2f}")
+                self.logger.info(f"Walk forward 效率: {summary['efficiency']:.2f}")
             else:
-                print("测试期验证失败")
+                self.logger.warning("测试期验证失败")
     
     def _run_test_period(self, params: Dict[str, Any], test_start: str, test_end: str):
         """运行测试期回测"""
@@ -218,7 +220,7 @@ class WalkForwardAnalyzer:
             return result
             
         except Exception as e:
-            print(f"测试期回测失败: {str(e)}")
+            self.logger.error(f"测试期回测失败: {str(e)}")
             return None
     
     def get_summary_statistics(self):
@@ -299,4 +301,4 @@ class WalkForwardAnalyzer:
             df_test = pd.DataFrame(test_flat)
             df_test.to_csv(f'{output_dir}/test_results.csv', index=False)
         
-        print(f"结果已保存到 {output_dir}")
+        self.logger.info(f"结果已保存到 {output_dir}")

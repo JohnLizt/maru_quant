@@ -1,8 +1,10 @@
 import backtrader as bt
 import pandas as pd
+import logging
 
 from indicator.PivotHigh import PivotHigh
 from strategy.utils.bracketorder import cancel_bracket_orders, create_bracket_orders
+from utils.logger import setup_strategy_logger
 
 # Create a Stratey
 class SimpleBreakout(bt.Strategy):
@@ -24,12 +26,13 @@ class SimpleBreakout(bt.Strategy):
         self.entry_bar = None  # 记录开仓的bar索引
         self.bracket_orders = []  # 存储bracket订单对象
 
+        self.logger = setup_strategy_logger(self, __name__, "INFO")
+
     def next(self):
-        # debug log, print order and position
-        # self.log(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}')
+        self.logger.debug(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}')
         if not self.position:
             if self.bracket_orders:
-                self.log(f'ORDER PENDING, skip next') # 下市价单，一般不会走到这
+                self.logger.info(f'ORDER PENDING, skip next') # 下市价单，一般不会走到这
                 return
 
             if self.break_signal():
@@ -40,17 +43,15 @@ class SimpleBreakout(bt.Strategy):
             if (self.params.max_hold_bars > 0 and 
                 self.entry_bar is not None and 
                 len(self) - self.entry_bar >= self.params.max_hold_bars):
-                self.log(f'[信号]：超过最大持仓时间 {self.params.max_hold_bars}, 强制平仓')
+                self.logger.info(f'[信号]：超过最大持仓时间 {self.params.max_hold_bars}, 强制平仓')
                 cancel_bracket_orders(self)
                 self.close()
                 self.entry_bar = None
                 return
-            # self.log(f'HOLD, Price: {self.dataclose[0]:.2f}, Entry: {self.position.price:.2f}, Hold Time: {len(self) - self.entry_bar}')
 
 
     def notify_order(self, order):
-        # debug log
-        # self.log('Order {}, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
+        self.logger.debug('Order {}, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
         if order.status in [order.Submitted, order.Accepted]:
             return
 
@@ -59,14 +60,13 @@ class SimpleBreakout(bt.Strategy):
             comminfo = self.broker.getcommissioninfo(self.data)
             margin = comminfo.get_margin(order.executed.price)
             if order.isbuy():
-                self.log('BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
+                self.logger.info('BUY EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
                     (order.executed.price, order.executed.size, margin, order.executed.comm, self.broker.getcash()))
             else: 
-                self.log('SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
+                self.logger.info('SELL EXECUTED, Price: %.2f, Size: %.2f Lot, Margin: %.2f, Comm %.2f, CASH %.2f' %
                     (order.executed.price, order.executed.size, margin, order.executed.comm, self.broker.getcash()))
 
         # elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-        #     self.log('Order {} CANCELED, Price: {}, Type: {}, Status: {}'.format(order.ref, order.executed.price if order.executed.price else order.price, 'Buy' * order.isbuy() or 'Sell', order.getstatusname()))
 
         # 清理已完成或取消的订单
         if not order.alive() and order in self.bracket_orders:
@@ -77,15 +77,8 @@ class SimpleBreakout(bt.Strategy):
         if not trade.isclosed:
             return
 
-        self.log('TRADE DONE, GROSS %.2f, NET %.2f' %
+        self.logger.info('TRADE DONE, GROSS %.2f, NET %.2f' %
                  (trade.pnl, trade.pnlcomm))
-
-
-    def log(self, txt, dt=None):
-        ''' Logging function fot this strategy'''
-        dt = dt or self.datas[0].datetime[0]
-        print('%s, %s' % (bt.num2date(dt).strftime('%Y-%m-%d %H:%M:%S'), txt))
-
 
     def break_signal(self):
         """Check if the current price breaks the resistance level"""
@@ -93,7 +86,6 @@ class SimpleBreakout(bt.Strategy):
         for resist_name in resist_lines:
             resist_value = getattr(self.resistance.lines, resist_name)[0]
             if not pd.isna(resist_value) and self.ema[-1] < resist_value < self.ema[0]:
-                self.log(f'[信号]：均线突破阻力位 {resist_value:.2f}, 均线价格 {self.ema[0]:.2f}，执行买入')
+                self.logger.info(f'[信号]：均线突破阻力位 {resist_value:.2f}, 均线价格 {self.ema[0]:.2f}，执行买入')
                 return True
         return False
-    

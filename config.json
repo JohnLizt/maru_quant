@@ -1,7 +1,7 @@
 {
   "backtest_config": {
     "basic" : {
-      "file": "data/longtime/XAUUSD_30_2020-01-01-2025-07-27.csv",
+      "file": "data/OANDA_XAUUSD, 30_a6bf1.csv",
       "start_date": "",
       "end_date": ""
     },
@@ -11,8 +11,8 @@
       "fixed_size_stake": 1
     },
     "validation" : {
-      "walk_forward_mode": true,
-      "train_quarters" : 4,
+      "walk_forward_mode": false,
+      "train_quarters" : 6,
       "test_quarters" : 2
     },
     "optimize" : {
@@ -21,12 +21,17 @@
   },
   "broker_config": {
     "tick_type": "CFD",
-    "cash": 100,
+    "cash": 1000,
     "leverage": 200.0,
     "spread": 0.16,
     "multiplier": 1,
     "fixed_commission": true,
     "commission": 0
+  },
+  "logger_config": {
+    "log_level": "INFO",
+    "log_to_console": true,
+    "log_to_file": false
   },
   "download_config": {
     "twelvedata_config" : {
