@@ -2,6 +2,7 @@ import logging
 import os
 from datetime import datetime
 import backtrader as bt
+from utils.config_manager import config_manager
 
 def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = True):
     """
@@ -63,6 +64,12 @@ def setup_strategy_logger(strategy, name: str = "strategy", level: str = "INFO")
     
     # 避免重复添加handler
     if logger.handlers:
+        return logger
+    
+    # 使用ConfigManager检查是否需要抑制输出
+    if config_manager.walk_forward_mode or config_manager.optimize_mode:
+        null_handler = logging.NullHandler()
+        logger.addHandler(null_handler)
         return logger
     
     # 创建自定义formatter，使用数据时间

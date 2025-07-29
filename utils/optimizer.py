@@ -2,15 +2,16 @@ import backtrader as bt
 import itertools
 import pandas as pd
 from typing import Dict, List, Any, Tuple
+from utils import config_manager
 from utils.backtest_runner import BacktestRunner
-from utils.logger import get_logger
+from utils.logger import get_logger, setup_logger
 
 class GridSearchOptimizer:
     def __init__(self, strategy_class, data_feed, cash=100000, commission=0.00015, stake=1, sizer_type="fixed", size_percent=100, tick_type="stock"):
         self.strategy_class = strategy_class
         self.data_feed = data_feed
         self.results = []
-        self.logger = get_logger("main")
+        self.logger = setup_logger("grid search optimizer", config_manager.log_level, config_manager.log_to_file)
         
         # 创建BacktestRunner实例
         self.backtest_runner = BacktestRunner(

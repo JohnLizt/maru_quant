@@ -16,8 +16,11 @@ end_date = config_manager.end_date
 # parse start-end date from filename
 fname_start_date, fname_end_date = extract_dates_from_filename(dataFile)
 
-# Initialize logger
-logger = setup_logger("main", config_manager.log_level, config_manager.log_to_file)
+# initialize logger
+if (config_manager.walk_forward_mode or config_manager.optimize_mode):
+    logger = setup_logger("main", config_manager.log_level, True) # 固定输出日志到文件
+else:
+    logger = setup_logger("main", config_manager.log_level, config_manager.log_to_file)
 
 
 def run_backtest():
@@ -115,22 +118,20 @@ def run_walk_forward():
     )
     
     # 定义参数网格
-    # param_grid = {
-    #     'window': [16],
-    #     'threshold': [0.001],
-    #     'take_profit': [15, 25, 35],
-    #     'stop_loss': [5, 15, 25],
-    #     'sma_period': [20]
-    # }
     param_grid = {
-        'maperiod': [20]
+        # 'window': [16],
+        # 'threshold': [0.001],
+        # 'take_profit': [35],
+        # 'stop_loss': [25],
+        # 'sma_period': [15],
+        # 'max_hold_bars': [24]
     }
     
     # 执行Walk-Forward分析
     wf_analyzer.run_walk_forward_analysis(
         param_grid=param_grid,
-        train_quarters=config_manager.validation_config.get("train_quarters", 2),
-        test_quarters=config_manager.validation_config.get("test_quarters", 1)
+        train_quarters=config_manager.validation_config.get("train_quarters", 4),
+        test_quarters=config_manager.validation_config.get("test_quarters", 2)
     )
     
     # 显示汇总统计

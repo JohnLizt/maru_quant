@@ -1,24 +1,23 @@
-> 量化大方向上可以分为alpha、beta两大流派
->
-> alpha追求中性，无视市场变化，赚取波动价差，中高频，持有1天以上就算低频了
->
-> beta更类似传统主观交易，只是纪律性好
-
 # data source
 
-| --            | --        |
-| ------------- | --------- |
-| **free**      |           |
-| yfinance      |           |
-| alpha vantage | - [ ] asd |
-| **charge**    |           |
-| tradingview   |           |
-
+| source        | cost (month) | XAUUSD              |
+| ------------- | ------------ | ------------------- |
+| yfinance      | free         | no data             |
+| alpha vantage | free         | till 2020           |
+| tradingview   | 14$          | till 2023 (precise) |
+| tickstory     |              |                     |
+| MT5           |              |                     |
 
 
 
 # strategy
 
+> 量化大方向上可以分为alpha、beta两大流派
+>
+> alpha追求中性，无视市场变化，赚取波动价差，中高频，持有1天以上就算低频了
+>
+> beta更类似传统主观交易，受行情影响、波动都很大
+>
 > 1. **趋势跟踪（Trend Following）**
 >    - 代表：SMA/EMA突破、Donchian通道、Turtle策略、ADX趋势跟随等
 >    - 逻辑：价格突破某一均值或区间后顺势买入/卖出，长期持有趋势单
@@ -116,16 +115,16 @@
 
 
 
-| strategy   | info                                                         | test       |         |        |         | review                                                       |
-| ---------- | ------------------------------------------------------------ | ---------- | ------- | ------ | ------- | ------------------------------------------------------------ |
-| **resist** |                                                              | **sharpe** | **Mdd** | **WR** | **P/L** | **accuracy & recall**                                        |
-| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t |            |         |        |         | 1. chase rising                                              |
-| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss |            |         |        |         | 1.resist definition not good                                 |
-| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy |            |         |        |         | 1.too decrete                                                |
-| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management |            |         |        |         | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
-| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders |            |         |        |         | 1.fake breakout<br />2.avoid fierce volatility<br />3.take profit/ stop loss too fierce, not smooth<br />4.trend filter |
-| v1.0.5     | 1. implement walk-forward analysis <br />2. add logger for optimization | 1.18       | 51%     | 41%    | 1.2     |                                                              |
-| v1.0.6     | 1. dynamic take profit / stop loss<br />2. impl short orderg<br /> |            |         |        |         |                                                              |
+| strategy   | info                                                         | review                                                       |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **resist** |                                                              | **accuracy & recall**                                        |
+| v1.00      | 1. use extreme value as resist / support<br />2. breakout -> buy / breakdown -> sell <br />3. close after 3 t | 1. chase rising                                              |
+| v1.01      | 1. break -> observe -> buy + sell<br />2. CSI: candle strength index<br />3. add take profit / stop loss | 1.resist definition not good                                 |
+| v1.02      | 1. pivot: slide windows + monostack<br />2. simple breakout strategy | 1.too decrete                                                |
+| v1.0.3     | 1. sma simple breakout strategy<br />2. grid search optimizer<br />3. train-test split<br />4. size management | 1. latency; <br />2. not good at big volatility<br />3. too many fake breakout |
+| v1.0.4     | 1. compare sma, ema, wma<br />2. add commission info (margin, leverage)<br />3. add bracket orders | 1.fake breakout<br />2.avoid fierce volatility<br />3.take profit/ stop loss too fierce, not smooth<br />4.trend filter |
+| v1.0.5     | 1. implement walk-forward analysis <br />2. add logger for optimization | 1.WFE not very stable                                        |
+| v1.0.6     | 1. dynamic take profit / stop loss<br />2. impl short orderg<br /> |                                                              |
 
 
 
@@ -154,8 +153,6 @@
 > 2. WFE：检验策略是否过拟合（不同周期表现是否一致）
 > 3. 获取参数建议和不同周期内策略表现，方便进一步调整
 >
-> 关于**WFE**：反映策略**是否过拟合**，即训练期表现能否在测试期复现，但是这个指标受到市场本身波动的影响较大
->
 > - 窗口长度如何设置
 >
 > 窗口过短，夏普率计算不可信，因此测试集至少要半年以上（6000条）
@@ -165,13 +162,44 @@
 > ![image-20250729094448028](assets\image-20250729094448028.png)
 >
 > - 参数不续训：倾向验证策略本身而不是参数
+>
+> 
+>
+> ## **WFE想验证的核心问题**
+>
+> ### A. **模型/参数是否具有可迁移性**
+>
+> - 训练期参数/模型在未来（测试期）是否依然有效。
+> - 换句话说，策略是否过拟合历史数据，还是能适应未来市场变化。
+>
+> ### B. **样本外表现与样本内的关系**
+>
+> - 理想状态：样本外（test）表现与样本内（train）表现接近，WFE接近1。
+> - 如果样本外显著逊色于样本内，WFE远小于1（甚至为负），说明策略过拟合或不稳定。
+> - 如果样本外反而优于样本内，WFE大于1，可能是市场变化带来的偶然结果，也需警惕。
+>
+> ### C. **策略的鲁棒性与稳定性**
+>
+> - 多窗口滚动下，WFE的分布反映了策略在不同市场阶段、参数组合下的稳定性。
+> - WFE均值高且分布集中，说明策略稳健；极端波动说明策略对市场变化敏感，风险大。
 
-* **strategy performance** (multi windows avg_test result)
 
-| strategy | sharpe | max_dd  | return | win_rate | PL_ratio | WFE  | comment |
-| -------- | ------ | ------- | ------ | -------- | -------- | ---- | ------- |
-| SMA      | 0.4928 | 77.0512 | 0.6321 | 24%      | 2.9169   | 2.8  |         |
-|          |        |         |        |          |          |      |         |
+
+## **strategy performance** 
+
+> **data**: past 5 years
+>
+> **window**: 1 year train, half year test
+>
+> **account**: 500 cash, 0.01 lot (**return** is related to initial cash, here we use very conservative value)
+>
+> final summarize: use **<u>time-weighted avg</u>** for better reflect recent performance
+
+| strategy       | sharpe | max_dd  | return | win_rate | PL_ratio | WFE           | comment                     |
+| -------------- | ------ | ------- | ------ | -------- | -------- | ------------- | --------------------------- |
+| SMA            | 0.8028 | 14.7693 | 0.1030 | 26.7742  | 3.0138   | 0.7737∓2.1814 | is it even OK for baseline? |
+| SimpleBreakout | 1.3866 | 12.8653 | 0.1918 | 51.5979  | 1.3915   | 2.1524∓5.6502 | why WFE so big??            |
+|                |        |         |        |          |          |               |                             |
 
 
 

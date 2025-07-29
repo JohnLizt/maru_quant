@@ -46,6 +46,7 @@ class BacktestRunner:
         strategy_class,
         data_feed,
         params: Dict[str, Any],
+        plot = False
     ) -> Optional[Dict[str, Any]]:
         """
         运行单次回测
@@ -109,6 +110,13 @@ class BacktestRunner:
                 'final_value': final_value,
             }
             
+            if (plot):
+                cerebro.plot(
+                    style='candlestick',
+                    bgcolor='white',
+                    tight_layout=True,
+                )
+ 
             return backtest_result
             
         except Exception as e:

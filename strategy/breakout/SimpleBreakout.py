@@ -11,7 +11,7 @@ class SimpleBreakout(bt.Strategy):
     params = (
         ('window', 12),  # 滑动窗口大小（影响resist的密集程度，窗口越小，resist越密集）
         ('threshold', 0.001),  # 区间阈值，默认0.1%（影响resist的密集程度，区间定义越宽，resist越密集）
-        ('max_hold_bars', 24),   # 最大持仓时间，默认-1
+        ('max_hold_bars', 24),   # 最大持仓时间，默认24, 12小时
         ('take_profit', 30),  # 止盈价格差，默认30个价格点
         ('stop_loss', 15),    # 止损价格差，默认15个价格点
         ('sma_period', 20),  # 均线周期，默认20

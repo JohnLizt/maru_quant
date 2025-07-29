@@ -2,11 +2,13 @@ import pandas as pd
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Any
 import warnings
+import numpy as np
 
+from utils import config_manager
 from utils.optimizer import GridSearchOptimizer
 from utils.dataloader import load_data
 from utils.backtest_runner import BacktestRunner
-from utils.logger import get_logger
+from utils.logger import get_logger, setup_logger
 
 class WalkForwardAnalyzer:
     def __init__(self, strategy_class, data_file, start_date, end_date, 
@@ -24,7 +26,11 @@ class WalkForwardAnalyzer:
         """
         self.strategy_class = strategy_class
         self.data_file = data_file
-        self.logger = get_logger("main")
+        self.logger = setup_logger("walk forward analyzer", config_manager.log_level, True) # 固定输出到文件
+        
+        # 打印当前使用的策略名称
+        self.strategy_name = strategy_class.__name__ if hasattr(strategy_class, '__name__') else str(strategy_class)
+        self.logger.info(f"当前使用的策略: {self.strategy_name}")
         
         # 创建BacktestRunner实例
         self.backtest_runner = BacktestRunner(
@@ -108,7 +114,7 @@ class WalkForwardAnalyzer:
         return windows
     
     def run_walk_forward_analysis(self, param_grid: Dict[str, List[Any]], 
-                                 train_quarters=8, test_quarters=1):
+                                 train_quarters=4, test_quarters=2):
         """
         执行Walk-Forward Analysis
         
@@ -179,14 +185,15 @@ class WalkForwardAnalyzer:
                 self.test_results.append(test_result)
                 
                 # 汇总结果
+                train_sharpe = train_result['train_performance']['sharpe_ratio']
                 summary = {
                     'window': i+1,
                     'train_start': train_start,
                     'train_end': train_end,
                     'test_start': test_start,
                     'test_end': test_end,
-                    'efficiency': test_result['sharpe_ratio'] / train_result['train_performance']['sharpe_ratio'] if train_result['train_performance']['sharpe_ratio'] != 0 else 0,
-                    'train_sharpe': train_result['train_performance']['sharpe_ratio'],
+                    'efficiency': test_result['sharpe_ratio'] / train_sharpe if train_sharpe != 0 else 0,
+                    'train_sharpe': train_sharpe,
                     'test_sharpe': test_result['sharpe_ratio'],
                     'train_return': train_result['train_performance']['total_return'],
                     'test_return': test_result['total_return'],
@@ -207,7 +214,7 @@ class WalkForwardAnalyzer:
                 self.logger.info(f"Walk forward 效率: {summary['efficiency']:.2f}")
             else:
                 self.logger.warning("测试期验证失败")
-    
+
     def _run_test_period(self, params: Dict[str, Any], test_start: str, test_end: str):
         """运行测试期回测"""
         try:
@@ -246,25 +253,23 @@ class WalkForwardAnalyzer:
         avg_test_return = sum(df['test_return'].iloc[i] * normalized_weights[i] for i in range(num_windows))
         avg_test_win_rate = sum(df['test_win_rate'].iloc[i] * normalized_weights[i] for i in range(num_windows))
         avg_test_PL_ratio = sum(df['test_PL_ratio'].iloc[i] * normalized_weights[i] for i in range(num_windows))
-        avg_train_sharpe = sum(df['train_sharpe'].iloc[i] * normalized_weights[i] for i in range(num_windows))
-
-        # 计算walk forward efficiency指标
-        efficiency = avg_test_sharpe / avg_train_sharpe if avg_train_sharpe != 0 else 0
+        avg_efficiency = sum(df['efficiency'].iloc[i] * normalized_weights[i] for i in range(num_windows))
         
         return {
-            'total_windows': len(df),
-            'avg_test_sharpe': avg_test_sharpe,
-            'avg_test_max_dd': avg_test_max_dd,
-            'avg_test_return': avg_test_return,
-            'avg_test_win_rate': avg_test_win_rate,
-            'avg_test_PL_ratio': avg_test_PL_ratio,
-            'std_test_return': df['test_return'].std(),
-            'positive_periods': (df['test_return'] > 0).sum(),
-            'period_win_rate': (df['test_return'] > 0).mean(),
-            'best_test_return': df['test_return'].max(),
-            'worst_test_return': df['test_return'].min(),
-            'consistency_score': df['test_return'].mean() / df['test_return'].std() if df['test_return'].std() > 0 else 0,
-            'walk_forward_efficiency': efficiency
+            'Strategy': self.strategy_name,
+            'Total Windows': len(df),
+            'Avg Test Sharpe': avg_test_sharpe,
+            'Avg Test MaxDd': avg_test_max_dd,
+            'WFE': avg_efficiency,
+            'Std WFE': df['efficiency'].std(),
+            'Avg Test WinRate': avg_test_win_rate,
+            'Avg Test PL Ratio': avg_test_PL_ratio,
+            'Avg Test Return': avg_test_return,
+            'Std Test Return': df['test_return'].std(),
+            'Best Test Return': df['test_return'].max(),
+            'Worst Test Return': df['test_return'].min(),
+            'Period Win Rate': (df['test_return'] > 0).mean(),
+            'Consistency Score': df['test_return'].mean() / df['test_return'].std() if df['test_return'].std() > 0 else 0,
         }
     
     def save_results(self, output_dir='utils/walk_forward_results'):
