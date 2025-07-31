@@ -4,3 +4,4 @@ data/
 log/
 utils/optimize_result/
 utils/walk_forward_results/
+trade/mt5_gateway/account.json

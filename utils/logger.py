@@ -4,7 +4,7 @@ from datetime import datetime
 import backtrader as bt
 from utils.config_manager import config_manager
 
-def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = True):
+def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = True, filename: str = None):
     """
     设置日志配置
     
@@ -12,6 +12,7 @@ def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = T
         name: logger名称
         level: 日志级别 (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         log_to_file: 是否输出到文件
+        filename: 自定义日志文件路径和名称，如果为None则使用默认路径
     """
     # 创建logger
     logger = logging.getLogger(name)
@@ -33,11 +34,25 @@ def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = T
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     
-    # 创建file handler (如果需要)
+    # 创建file handler
     if log_to_file:
-        os.makedirs('log', exist_ok=True)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        log_file = f'log/quant_{timestamp}.log'
+        if filename:
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            log_file = f"{filename}_{timestamp}.log"
+            
+            # 确保目录存在
+            log_dir = os.path.dirname(log_file)
+            if log_dir:
+                os.makedirs(log_dir, exist_ok=True)
+            else:
+                raise ValueError("Invalid log file path")
+        else:
+            # 使用默认路径和时间戳命名
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            log_dir = os.path.join(project_root, 'log')
+            os.makedirs(log_dir, exist_ok=True)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            log_file = f'log/backtest_{timestamp}.log'
         
         file_handler = logging.FileHandler(log_file, encoding='utf-8')
         file_handler.setLevel(logging.DEBUG)  # 文件记录所有级别
