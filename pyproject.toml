@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "maru_quant"
+version = "0.1.0"
+description = "Quantitative trading system"
+requires-python = ">=3.8"
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "backtrader",
+    "beautifulsoup4",
+    "requests",
+    "yfinance",
+    "twelvedata",
+    "python-dateutil",
+    "pytz",
+    "peewee",
+    "websockets",
+    "pytimeparse",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8",
+    "mypy",
+]
+
+# 导入路径配置
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["maru_quant*"]
+
+[tool.setuptools.package-dir]
+"" = "src"

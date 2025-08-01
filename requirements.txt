@@ -35,4 +35,3 @@ urllib3==2.5.0
 websockets==15.0.1
 yfinance==0.2.65
 zipp==3.23.0
-MetaTrader5==5.0

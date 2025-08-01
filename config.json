@@ -11,7 +11,7 @@
       "fixed_size_stake": 1
     },
     "validation" : {
-      "walk_forward_mode": false,
+      "walk_forward_mode": true,
       "train_quarters" : 4,
       "test_quarters" : 2
     },

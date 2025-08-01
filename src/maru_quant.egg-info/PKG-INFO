@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: maru_quant
+Version: 0.1.0
+Summary: Quantitative trading system
+Requires-Python: >=3.8
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: backtrader
+Requires-Dist: beautifulsoup4
+Requires-Dist: requests
+Requires-Dist: yfinance
+Requires-Dist: twelvedata
+Requires-Dist: python-dateutil
+Requires-Dist: pytz
+Requires-Dist: peewee
+Requires-Dist: websockets
+Requires-Dist: pytimeparse
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
