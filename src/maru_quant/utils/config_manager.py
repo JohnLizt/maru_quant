@@ -27,6 +27,7 @@ class ConfigManager:
         self.backtest_config = self._config.get("backtest_config", {})
         self.broker_config = self._config.get("broker_config", {})
         self.logger_config = self._config.get("logger_config", {})
+        self.mt5_config = self._config.get("mt5_config", {})
         
         # backtest config
         self.basic_config = self.backtest_config.get("basic", {})

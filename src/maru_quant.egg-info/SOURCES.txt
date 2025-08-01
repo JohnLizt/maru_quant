@@ -10,8 +10,8 @@ src/maru_quant/analyzer/WinLossRatioAnalyzer.py
 src/maru_quant/analyzer/__init__.py
 src/maru_quant/analyzer/robustsharpe_30min.py
 src/maru_quant/analyzer/sharperatio_30min.py
-src/maru_quant/broker/CommissionInfo.py
 src/maru_quant/broker/__init__.py
+src/maru_quant/broker/commission_info.py
 src/maru_quant/indicator/CandleStrengthIndex.py
 src/maru_quant/indicator/PivotHigh.py
 src/maru_quant/indicator/PivotLow.py

@@ -11,13 +11,20 @@
       "fixed_size_stake": 1
     },
     "validation" : {
-      "walk_forward_mode": true,
+      "walk_forward_mode": false,
       "train_quarters" : 4,
       "test_quarters" : 2
     },
     "optimize" : {
       "optimize_mode": false
     }
+  },
+  "mt5_config" : {
+    "account" : 277055782,
+    "password" : "Secure8964!",
+    "server" : "Exness-MT5Trial5",
+    "timeout" : 10000,
+    "timeframe" : "M30"
   },
   "broker_config": {
     "tick_type": "CFD",

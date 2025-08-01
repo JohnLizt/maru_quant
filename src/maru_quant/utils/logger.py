@@ -4,7 +4,7 @@ from datetime import datetime
 import backtrader as bt
 from maru_quant.utils.config_manager import config_manager
 
-def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = True, filename: str = None):
+def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = True, filename: str = "backtest"):
     """
     设置日志配置
     
@@ -36,26 +36,16 @@ def setup_logger(name: str = "quant", level: str = "INFO", log_to_file: bool = T
     
     # 创建file handler
     if log_to_file:
-        if filename:
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            log_file = f"{filename}_{timestamp}.log"
-            
-            # 确保目录存在
-            log_dir = os.path.dirname(log_file)
-            if log_dir:
-                os.makedirs(log_dir, exist_ok=True)
-            else:
-                raise ValueError("Invalid log file path")
-        else:
-            # 使用默认路径和时间戳命名
-            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            log_dir = os.path.join(project_root, 'log')
-            os.makedirs(log_dir, exist_ok=True)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            log_file = f'log/backtest_{timestamp}.log'
+        # 固定项目根目录 (maru_quant目录)
+        current_file = os.path.abspath(__file__)
+        project_root = current_file.split('src')[0].rstrip(os.sep)
+        log_dir = os.path.join(project_root, 'log')
+        os.makedirs(log_dir, exist_ok=True)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        log_file = os.path.join(log_dir, f'{filename}_{timestamp}.log')
         
         file_handler = logging.FileHandler(log_file, encoding='utf-8')
-        file_handler.setLevel(logging.DEBUG)  # 文件记录所有级别
+        file_handler.setLevel(getattr(logging, level.upper())) 
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
     

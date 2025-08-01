@@ -1,10 +1,9 @@
-import datetime
+from datetime import datetime
 import os
 import MetaTrader5 as mt5
-import time
 from typing import Optional, Dict, Any
 from enum import Enum
-from utils.logger import setup_logger
+from maru_quant.utils.logger import setup_logger
 
 class OrderType(Enum):
     """订单类型枚举"""
@@ -25,9 +24,7 @@ class MT5OrderManager:
         self.strategy = strategy
         self.magic_number = 234000 # TODO: get from magic number manager
 
-        log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'log')
-        filename = f"{log_dir}/mt5_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        self.logger = setup_logger(__name__, level="INFO", log_to_file=True, filename=filename)
+        self.logger = setup_logger(__name__, level="INFO", log_to_file=True, filename="mt5")
 
     def place_market_order(self, symbol: str, volume: float, 
                           order_type: str, 
@@ -84,7 +81,7 @@ class MT5OrderManager:
             "magic": self.magic_number,
             "comment": comment,
             "type_time": mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_RETURN,
+            "type_filling": mt5.ORDER_FILLING_FOK,
         }
         
         # 添加止损止盈
@@ -95,16 +92,16 @@ class MT5OrderManager:
         
         # 发送订单
         result = mt5.order_send(request)
-        
+        self.logger.info(f"[ORDER SEND]: {order_type} {symbol} {volume} lots at {price} with deviation={deviation} points")
         if result.retcode != mt5.TRADE_RETCODE_DONE:
-            self.logger.error(f"Market order failed: {result.retcode}")
+            self.print_error(result)
             return {
                 "success": False, 
                 "error": f"Order failed with retcode: {result.retcode}",
                 "result": result._asdict()
             }
         
-        self.logger.info(f"Market order successful: {order_type} {volume} lots of {symbol} at {price}")
+        self.logger.info(f"[ORDER SUCCESS]: {order_type} {volume} lots of {symbol} at {price}, order_id: {result.order}")
         return {
             "success": True,
             "order_id": result.order,
@@ -167,16 +164,16 @@ class MT5OrderManager:
         
         # 发送订单
         result = mt5.order_send(request)
-        
+        self.logger.info(f"[ORDER SEND]: {order_type} {symbol} {volume} lots at {price}")
         if result.retcode != mt5.TRADE_RETCODE_DONE:
-            self.logger.error(f"Limit order failed: {result.retcode}")
+            self.print_error(result)
             return {
                 "success": False, 
                 "error": f"Order failed with retcode: {result.retcode}",
                 "result": result._asdict()
             }
         
-        self.logger.info(f"Limit order successful: {order_type} {volume} lots of {symbol} at {price}")
+        self.logger.info(f"[ORDER SUCCESS]: {order_type} {volume} lots of {symbol} at {price}, order_id: {result.order}")
         return {
             "success": True,
             "order_id": result.order,
@@ -237,50 +234,35 @@ class MT5OrderManager:
             "magic": self.magic_number,
             "comment": "Python close position",
             "type_time": mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_RETURN,
+            "type_filling": mt5.ORDER_FILLING_IOC,
         }
         
         # 发送平仓请求
         result = mt5.order_send(request)
-        
+        self.logger.info(f"[ORDER SEND]: CLOSE {symbol} {close_volume} lots at {price}")
         if result.retcode != mt5.TRADE_RETCODE_DONE:
-            self.logger.error(f"Close position failed: {result.retcode}")
+            self.print_error(result)
             return {
                 "success": False, 
                 "error": f"Close failed with retcode: {result.retcode}",
                 "result": result._asdict()
             }
         
-        self.logger.info(f"Position closed: {close_volume} lots of {symbol}")
+        self.logger.info(f"[ORDER SUCCESS]: CLOSE {close_volume} lots of {symbol} at {price}, order_id: {result.order}")
         return {
             "success": True,
             "closed_volume": close_volume,
             "result": result._asdict()
         }
 
-# 使用示例
-if __name__ == "__main__":
-    from mt5_connection_manager import MT5ConnectionManager
-    
-    with MT5ConnectionManager() as conn:
-        order_manager = EnhancedOrderManager()
-        
-        # 下市价买单
-        result = order_manager.place_market_order(
-            symbol="XAUUSDm",
-            volume=0.01,
-            order_type="BUY",
-            comment="Test market buy"
-        )
-        print("Market order result:", result)
-        
-        # 下限价卖单
-        current_price = mt5.symbol_info_tick("XAUUSDm").bid
-        limit_result = order_manager.place_limit_order(
-            symbol="XAUUSDm",
-            volume=0.01,
-            price=current_price + 10,  # 高于当前价格10个点
-            order_type="SELL_LIMIT",
-            comment="Test limit sell"
-        )
-        print("Limit order result:", limit_result)
+    def print_error(self, result):
+        """打印错误信息"""
+        self.logger.error(f"[ORDER FAILED]: {result.retcode}")
+        result_dict=result._asdict()
+        for field in result_dict.keys():
+            self.logger.error("   {}={}".format(field,result_dict[field]))
+            # if this is a trading request structure, display it element by element as well
+            if field=="request":
+                traderequest_dict=result_dict[field]._asdict()
+                for tradereq_filed in traderequest_dict:
+                    self.logger.error("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))

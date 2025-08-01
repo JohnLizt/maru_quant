@@ -1,29 +1,23 @@
-import datetime
+from datetime import datetime
 import json
 import os
 import MetaTrader5 as mt5
 
-from utils.logger import setup_logger
+from maru_quant.utils import config_manager
+from maru_quant.utils.logger import setup_logger
 
 class MT5ConnectionManager:
-    def __init__(self, config_path: str = None):
-        if config_path is None:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            config_path = os.path.join(current_dir, "config.json")
+    def __init__(self):
         
-        with open(config_path, 'r', encoding='utf-8') as f:
-            self.config = json.load(f)
-        
-        self.login = self.config.get("account")
-        self.password = self.config.get("password", "")
-        self.server = self.config.get("server", "")
-        self.timeout = self.config.get("timeout", 10000)
+        self.login = config_manager.mt5_config.get("account")
+        self.password = config_manager.mt5_config.get("password", "")
+        self.server = config_manager.mt5_config.get("server", "")
+        self.timeout = config_manager.mt5_config.get("timeout", 10000)
         self.portable = False
         self.is_connected = False
 
-        log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'log')
-        filename = f"{log_dir}/mt5_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        self.logger = setup_logger(__name__, level="INFO", log_to_file=True, filename=filename)
+        self.logger = setup_logger(__name__, level="INFO", log_to_file=True, filename="mt5")
+
     
     def connect(self) -> bool:
         """建立MT5连接"""
