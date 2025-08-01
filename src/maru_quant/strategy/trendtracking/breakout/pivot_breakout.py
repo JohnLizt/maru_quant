@@ -4,6 +4,7 @@ import logging
 
 from maru_quant.indicator.PivotHigh import PivotHigh
 from maru_quant.utils.logger import setup_strategy_logger
+from maru_quant.utils.config_manager import config_manager
 
 # Create a Strategy
 class PivotBreakout(bt.Strategy):
@@ -29,7 +30,7 @@ class PivotBreakout(bt.Strategy):
         self.entry_bar = None  # 记录开仓的bar索引
         self.bracket_orders = []  # 存储bracket订单对象
 
-        self.logger = setup_strategy_logger(self, __name__, "INFO")
+        self.logger = setup_strategy_logger(self, __name__, config_manager.log_level)
 
     def next(self):
         self.logger.debug(f'LOG: Price: {self.dataclose[0]:.2f}, Position: {self.position.size}, Orders: {len(self.bracket_orders)} Cash: {self.broker.getcash():.2f}, ATR: {self.atr[0]:.2f}')

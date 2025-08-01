@@ -1,16 +1,37 @@
 import time
-from pandas.plotting import register_matplotlib_converters
-register_matplotlib_converters()
-from maru_quant.live_trading.mt5_gateway import MT5ConnectionManager, MT5OrderManager
-portable = False
+import backtrader as bt
+
+from maru_quant.live_trading.mt5_gateway import MT5Broker, MT5Data
+from maru_quant.strategy.trendtracking.breakout import PivotBreakout
+from maru_quant.utils.config_manager import config_manager
+mt5_config = config_manager.mt5_config
 
 if __name__ == "__main__":
-    connect_manager = MT5ConnectionManager()
-    order_manager = MT5OrderManager("PivotBreakout")
-    symbol = "XAUUSDm"
+    cerebro = bt.Cerebro()
+    
+    # Add MT5 broker
+    broker = MT5Broker(
+        login=mt5_config.get("account"),
+        password=mt5_config.get("password"),
+        server=mt5_config.get("server"),
+    )
+    cerebro.setbroker(broker)
+    
+    # Add MT5 data
+    data = MT5Data(
+        symbol=mt5_config.get("symbol"),
+        timeframe=bt.TimeFrame.Minutes,
+        compression=mt5_config.get("frequency"),
+        historical=False
+    )
+    cerebro.adddata(data)
+    
+    # Add strategy
+    cerebro.addstrategy(PivotBreakout)
+    
+    # Add sizer
+    cerebro.addsizer(bt.sizers.FixedSize, stake=mt5_config.get("fixed_stake"))
 
-    with connect_manager:
-        # 执行交易操作
-        order_manager.place_market_order(symbol, 0.01, "SELL")
-        time.sleep(2)
-        order_manager.close_position(symbol)
+    # Run
+    cerebro.run()
+    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())

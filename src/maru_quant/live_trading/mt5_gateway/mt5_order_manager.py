@@ -5,21 +5,8 @@ from typing import Optional, Dict, Any
 from enum import Enum
 from maru_quant.utils.logger import setup_logger
 
-class OrderType(Enum):
-    """订单类型枚举"""
-    MARKET_BUY = mt5.ORDER_TYPE_BUY
-    MARKET_SELL = mt5.ORDER_TYPE_SELL
-    LIMIT_BUY = mt5.ORDER_TYPE_BUY_LIMIT
-    LIMIT_SELL = mt5.ORDER_TYPE_SELL_LIMIT
-    STOP_BUY = mt5.ORDER_TYPE_BUY_STOP
-    STOP_SELL = mt5.ORDER_TYPE_SELL_STOP
-
-class TradeAction(Enum):
-    """交易动作枚举"""
-    DEAL = mt5.TRADE_ACTION_DEAL      # 市价单
-    PENDING = mt5.TRADE_ACTION_PENDING # 挂单
-
 class MT5OrderManager:
+    """ just sample code """
     def __init__(self, strategy: str):
         self.strategy = strategy
         self.magic_number = 234000 # TODO: get from magic number manager

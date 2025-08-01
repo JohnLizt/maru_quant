@@ -7,6 +7,7 @@ from maru_quant.utils import config_manager
 from maru_quant.utils.logger import setup_logger
 
 class MT5ConnectionManager:
+    """ just sample code """
     def __init__(self):
         
         self.login = config_manager.mt5_config.get("account")

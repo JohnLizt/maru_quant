@@ -24,9 +24,11 @@
     "password" : "Secure8964!",
     "server" : "Exness-MT5Trial5",
     "timeout" : 10000,
-    "timeframe" : "M30"
+    "frequency" : 30,
+    "symbol" : "XAUUSDm",
+    "fixed_stake" : 0.01
   },
-  "broker_config": {
+  "bbroker_config": {
     "tick_type": "CFD",
     "cash": 500,
     "leverage": 200.0,
@@ -36,7 +38,7 @@
     "commission": 0
   },
   "logger_config": {
-    "log_level": "INFO",
+    "log_level": "DEBUG",
     "log_to_console": true,
     "log_to_file": false
   },

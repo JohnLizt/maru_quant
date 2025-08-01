@@ -205,7 +205,17 @@
 
 # Live Trading
 
+* 外汇交易商
 
+  | --     | spread | comment    |
+  | ------ | ------ | ---------- |
+  | Exness |        | 出入金ustd |
+
+  
+
+* backtrader 框架
+
+  <img src="D:\dev\quant\maru_quant\docs\assets\image-20250801194548325.png" alt="image-20250801194548325" style="zoom:50%;" />
 
 
 
@@ -219,6 +229,7 @@
 | 基本指标知识 | https://www.bilibili.com/video/BV12L4y1L7TA?spm_id_from=333.788.videopod.sections&vd_source=feacdd607007d02479769d9056af2634 |
 | 知乎         |                                                              |
 | MQL5         |                                                              |
+| 影中北斗     | [red book](https://www.xiaohongshu.com/user/profile/5d27fa48000000001102294a?xsec_token=YBtFmAL9BQw4UQWcgGWv10KyuJWt1lh9fkDmbibTorb5s=&xsec_source=app_share&xhsshare=WeixinSession&appuid=6108bf4f00000000010090ef&apptime=1754046279&share_id=8efd6f8b65fc40daa51655c578fb2420) |
 
 ## candles theory
 

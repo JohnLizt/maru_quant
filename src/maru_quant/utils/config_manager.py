@@ -25,7 +25,7 @@ class ConfigManager:
 
         # 解析各个配置部分
         self.backtest_config = self._config.get("backtest_config", {})
-        self.broker_config = self._config.get("broker_config", {})
+        self.broker_config = self._config.get("bbroker_config", {})
         self.logger_config = self._config.get("logger_config", {})
         self.mt5_config = self._config.get("mt5_config", {})
         

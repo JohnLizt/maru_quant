@@ -1,6 +1,7 @@
 import backtrader as bt
 import pandas as pd
 from maru_quant.utils.logger import setup_strategy_logger
+from maru_quant.utils.config_manager import config_manager
 
 # Create a Stratey
 class SMA(bt.Strategy):
@@ -31,7 +32,7 @@ class SMA(bt.Strategy):
         bt.indicators.SmoothedMovingAverage(rsi, period=10)
         bt.indicators.ATR(self.datas[0], plot=False)
 
-        self.logger = setup_strategy_logger(self, __name__, "INFO")
+        self.logger = setup_strategy_logger(self, __name__, config_manager.log_level)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
